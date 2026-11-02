@@ -348,10 +348,10 @@
             <div class="kpi-grid">
                 <div class="kpi-card warning" onclick="filterPendingPrimes()">
                     <div class="kpi-label">Primes en attente</div>
-                    <div class="kpi-value" id="kpi-primes-attente">0 â‚¬</div>
+                    <div class="kpi-value" id="kpi-primes-attente">0 €</div>
                 </div>
                 <div class="kpi-card success" onclick="showScreen('list')">
-                    <div class="kpi-label">RÃ©cup. En Cours</div>
+                    <div class="kpi-label">Récup. En Cours</div>
                     <div class="kpi-value" id="kpi-solde-recup">0 j</div>
                 </div>
             </div>
@@ -368,28 +368,28 @@
                 </div>
                 <div class="nav-btn-large" onclick="showScreen('list')">
                     <div class="nav-btn-content">
-                        <div class="nav-btn-icon">ðŸ“‹</div>
+                        <div class="nav-btn-icon">📋</div>
                         <div class="nav-btn-text">
                             <h2>Mes interventions</h2>
-                            <p>Suivi, validation & paie estimÃ©e</p>
+                            <p>Suivi, validation & paie estimée</p>
                         </div>
                     </div>
                 </div>
                 <div class="nav-btn-large" onclick="showScreen('charts')">
                     <div class="nav-btn-content">
-                        <div class="nav-btn-icon">ðŸ“Š</div>
+                        <div class="nav-btn-icon">📊</div>
                         <div class="nav-btn-text">
                             <h2>Graphiques</h2>
-                            <p>Ã‰volution des primes et rÃ©cupÃ©rations</p>
+                            <p>Évolution des primes et récupérations</p>
                         </div>
                     </div>
                 </div>
                 <div class="nav-btn-large" onclick="showScreen('settings')">
                     <div class="nav-btn-content">
-                        <div class="nav-btn-icon">âš™ï¸</div>
+                        <div class="nav-btn-icon">⚙️</div>
                         <div class="nav-btn-text">
-                            <h2>ParamÃ¨tres & RÃ¨gles</h2>
-                            <p>Affichage, forfaits, CSV PlÃ©iades</p>
+                            <h2>Paramètres & Règles</h2>
+                            <p>Affichage, forfaits, CSV Pléiades</p>
                         </div>
                     </div>
                 </div>
@@ -405,20 +405,20 @@
                     <label for="type-inter">Type d'intervention</label>
                     <select id="type-inter" onchange="onTypeChange()" required>
                         <option value="EMO">EMO (07h00 - 08h00)</option>
-                        <option value="ASTREINTE_SEMAINE">Astreinte semaine complÃ¨te</option>
-                        <option value="SITE_REMOTE" selected>Intervention Site / Ã€ distance</option>
-                        <option value="MAD_JOUR">Mise Ã  disposition / Astreinte Jour</option>
+                        <option value="ASTREINTE_SEMAINE">Astreinte semaine complète</option>
+                        <option value="SITE_REMOTE" selected>Intervention Site / À distance</option>
+                        <option value="MAD_JOUR">Mise à disposition / Astreinte Jour</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="libelle">LibellÃ© / Description</label>
+                    <label for="libelle">Libellé / Description</label>
                     <input type="text" id="libelle" placeholder="Ex: Incident prod Ekara" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="date-debut">Date dÃ©but</label>
+                        <label for="date-debut">Date début</label>
                         <input type="date" id="date-debut" onchange="onDateOrTimeChange()" required>
                     </div>
                     <div class="form-group" id="grp-date-fin">
@@ -429,7 +429,7 @@
 
                 <div class="form-row" id="grp-heures">
                     <div class="form-group">
-                        <label for="heure-debut">Heure dÃ©but</label>
+                        <label for="heure-debut">Heure début</label>
                         <input type="time" id="heure-debut" onchange="onDateOrTimeChange()">
                     </div>
                     <div class="form-group">
@@ -446,15 +446,15 @@
                 <div class="recap-box">
                     <div class="highlight-amounts">
                         <div>
-                            <div class="kpi-label">Prime EstimÃ©e</div>
-                            <div class="val-prime" id="calc-prime">0 â‚¬</div>
+                            <div class="kpi-label">Prime Estimée</div>
+                            <div class="val-prime" id="calc-prime">0 €</div>
                         </div>
                         <div>
-                            <div class="kpi-label">RÃ©cupÃ©ration</div>
+                            <div class="kpi-label">Récupération</div>
                             <div class="val-recup" id="calc-recup">0 j</div>
                         </div>
                     </div>
-                    <div class="rules-list" id="calc-rules">Ajustez les paramÃ¨tres pour calculer.</div>
+                    <div class="rules-list" id="calc-rules">Ajustez les paramètres pour calculer.</div>
                 </div>
 
                 <button type="submit" class="btn">Enregistrer l'intervention</button>
@@ -467,44 +467,44 @@
             <div class="form-row" style="margin-bottom: 12px;">
                 <input type="text" id="search-filter" placeholder="Rechercher (ex: EMO, Incident...)" oninput="renderList()">
                 <select id="status-filter" onchange="renderList()">
-                    <option value="NON_PAYEE" selected>1. Actives (Non payÃ©es/clÃ´turÃ©es)</option>
-                    <option value="A_DECLARER">2. A dÃ©clarer dans PlÃ©iade</option>
+                    <option value="NON_PAYEE" selected>1. Actives (Non payées/clôturées)</option>
+                    <option value="A_DECLARER">2. A déclarer dans Pléiade</option>
                     <option value="EN_ATTENTE_MANAGER">3. En attente de validation Manager</option>
-                    <option value="A_VERIFIER_PAIE">4. A vÃ©rifier dans la Paie</option>
-                    <option value="PAYEE">5. PayÃ©e / ClÃ´turÃ©e</option>
+                    <option value="A_VERIFIER_PAIE">4. A vérifier dans la Paie</option>
+                    <option value="PAYEE">5. Payée / Clôturée</option>
                     <option value="TOUS">6. Toutes les interventions</option>
                 </select>
             </div>
 
-            <div class="counter-badge" id="counter-badge">0 intervention affichÃ©e</div>
+            <div class="counter-badge" id="counter-badge">0 intervention affichée</div>
             <div id="interventions-container"></div>
         </div>
 
         <!-- GRAPHIQUES -->
         <div id="screen-charts" class="screen">
             <div class="form-group" style="margin-bottom: 16px;">
-                <label for="chart-year-filter">PÃ©riode du graphique (basÃ©e sur le mois de paie estimÃ©)</label>
+                <label for="chart-year-filter">Période du graphique (basée sur le mois de paie estimé)</label>
                 <select id="chart-year-filter" onchange="renderCharts()">
                     <option value="LAST_12" selected>12 derniers mois glissants</option>
-                    <option value="2026">AnnÃ©e 2026</option>
-                    <option value="2025">AnnÃ©e 2025</option>
+                    <option value="2026">Année 2026</option>
+                    <option value="2025">Année 2025</option>
                 </select>
             </div>
 
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 10px;">Ã‰volution Mensuelle des Primes (â‚¬) (Cliquez sur une barre)</div>
+                <div class="kpi-label" style="margin-bottom: 10px;">Évolution Mensuelle des Primes (€) (Cliquez sur une barre)</div>
                 <div class="chart-container" id="chart-primes-container"></div>
             </div>
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 10px;">RÃ©cupÃ©rations Acquises par Mois (Jours)</div>
+                <div class="kpi-label" style="margin-bottom: 10px;">Récupérations Acquises par Mois (Jours)</div>
                 <div class="chart-container" id="chart-recup-container"></div>
             </div>
         </div>
 
-        <!-- PARAMÃˆTRES -->
+        <!-- PARAMÈTRES -->
         <div id="screen-settings" class="screen">
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 12px;">PrÃ©fÃ©rence d'Affichage (Taille de police)</div>
+                <div class="kpi-label" style="margin-bottom: 12px;">Préférence d'Affichage (Taille de police)</div>
                 <div class="form-group">
                     <select id="font-size-selector" onchange="changeFontSize(this.value)">
                         <option value="font-small">Compacte</option>
@@ -515,27 +515,27 @@
             </div>
 
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 12px;">Moteur de RÃ¨gles & Forfaits</div>
+                <div class="kpi-label" style="margin-bottom: 12px;">Moteur de Règles & Forfaits</div>
                 <div class="form-row">
-                    <div class="form-group"><label>Prime EMO (â‚¬)</label><input type="number" id="cfg-emo" onchange="saveSettingsFromUI()"></div>
-                    <div class="form-group"><label>Astreinte Semaine (â‚¬)</label><input type="number" id="cfg-astreinte" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>Prime EMO (€)</label><input type="number" id="cfg-emo" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>Astreinte Semaine (€)</label><input type="number" id="cfg-astreinte" onchange="saveSettingsFromUI()"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>MAD Semaine (â‚¬)</label><input type="number" id="cfg-mad-sem" onchange="saveSettingsFromUI()"></div>
-                    <div class="form-group"><label>MAD WE / FÃ©riÃ© (â‚¬)</label><input type="number" id="cfg-mad-we" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>MAD Semaine (€)</label><input type="number" id="cfg-mad-sem" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>MAD WE / Férié (€)</label><input type="number" id="cfg-mad-we" onchange="saveSettingsFromUI()"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>Majoration Nuit (â‚¬)</label><input type="number" id="cfg-nuit" onchange="saveSettingsFromUI()"></div>
-                    <div class="form-group"><label>Semaine Court / Long (â‚¬)</label><input type="text" id="cfg-sem-forfaits" disabled style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>Majoration Nuit (€)</label><input type="number" id="cfg-nuit" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>Semaine Court / Long (€)</label><input type="text" id="cfg-sem-forfaits" disabled style="background:#f1f5f9;"></div>
                 </div>
             </div>
 
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 12px;">Import / Export DonnÃ©es</div>
+                <div class="kpi-label" style="margin-bottom: 12px;">Import / Export Données</div>
                 <div class="form-group">
-                    <label style="font-size: calc(var(--font-scale) * 0.8);">Import CSV PlÃ©iades</label>
+                    <label style="font-size: calc(var(--font-scale) * 0.8);">Import CSV Pléiades</label>
                     <input type="file" id="file-csv-pleiades" accept=".csv" style="margin-bottom: 8px;">
-                    <button class="btn btn-secondary" onclick="importCSVPlÃ©iades()">Charger CSV PlÃ©iades</button>
+                    <button class="btn btn-secondary" onclick="importCSVPléiades()">Charger CSV Pléiades</button>
                 </div>
                 <div class="form-group" style="margin-top: 12px;">
                     <label style="font-size: calc(var(--font-scale) * 0.8);">Restauration JSON</label>
@@ -551,22 +551,22 @@
 
     </div>
 
-    <!-- NAVIGATION INFÃ‰RIEURE -->
+    <!-- NAVIGATION INFÉRIEURE -->
     <div class="bottom-nav">
         <div class="bottom-nav-item active" id="nav-home" onclick="showScreen('home')">
-            <div class="bottom-nav-icon">ðŸ </div>
+            <div class="bottom-nav-icon">🏠</div>
             <div>Accueil</div>
         </div>
         <div class="bottom-nav-item" id="nav-list" onclick="showScreen('list')">
-            <div class="bottom-nav-icon">ðŸ“‹</div>
+            <div class="bottom-nav-icon">📋</div>
             <div>Suivi</div>
         </div>
         <div class="bottom-nav-item" id="nav-charts" onclick="showScreen('charts')">
-            <div class="bottom-nav-icon">ðŸ“Š</div>
+            <div class="bottom-nav-icon">📊</div>
             <div>Stats</div>
         </div>
         <div class="bottom-nav-item" id="nav-settings" onclick="showScreen('settings')">
-            <div class="bottom-nav-icon">âš™ï¸</div>
+            <div class="bottom-nav-icon">⚙️</div>
             <div>Config</div>
         </div>
     </div>
@@ -593,9 +593,9 @@
 
         const TYPE_LABELS = {
             'EMO': 'EMO',
-            'ASTREINTE_SEMAINE': 'Astreinte semaine complÃ¨te',
+            'ASTREINTE_SEMAINE': 'Astreinte semaine complète',
             'SITE_REMOTE': 'Intervention Site / A distance',
-            'MAD_JOUR': 'Mise Ã  disposition / Astreinte Jour'
+            'MAD_JOUR': 'Mise à disposition / Astreinte Jour'
         };
 
         function getFrenchHolidays(year) {
@@ -643,7 +643,7 @@
 
         function getEstimatedPayMonth(dateDebutStr, validationDateStr) {
             const refDateStr = validationDateStr || dateDebutStr;
-            if (!refDateStr) return 'PÃ©riode Ã  confirmer';
+            if (!refDateStr) return 'Période à confirmer';
             const startDate = new Date(refDateStr);
             const m = startDate.getMonth(), y = startDate.getFullYear();
             const limit10thDay = get10thWorkingDayOfMonth(refDateStr);
@@ -662,7 +662,7 @@
             if (type === 'MAD_JOUR') {
                 const day = new Date(data.dateDebut).getDay(), isHoliday = isFrenchHoliday(data.dateDebut);
                 prime = (day === 0 || day === 6 || isHoliday) ? appState.settings.madWeekEnd : appState.settings.madSemaine;
-                return { prime, recup: 0, durationHours: 24.0, rules: [`Mise Ã  disposition (${prime} â‚¬)`] };
+                return { prime, recup: 0, durationHours: 24.0, rules: [`Mise à disposition (${prime} €)`] };
             }
 
             const dtStart = new Date(`${data.dateDebut}T${data.heureDebut || '00:00'}:00`);
@@ -677,17 +677,17 @@
                 const cfg = appState.settings.forfaits.dimanche;
                 prime = isLong ? cfg.long : cfg.court;
                 recup = isLong ? cfg.recupLong : cfg.recupCourt;
-                rules.push(`Forfait Dimanche/FÃ©riÃ© (${isLong ? 'Long' : 'Court'}): ${prime} â‚¬`);
+                rules.push(`Forfait Dimanche/Férié (${isLong ? 'Long' : 'Court'}): ${prime} €`);
             } else if (endDay === 6 || startDay === 6) {
                 const cfg = appState.settings.forfaits.samedi;
                 prime = isLong ? cfg.long : cfg.court;
                 recup = isLong ? cfg.recupLong : cfg.recupCourt;
-                rules.push(`Forfait Samedi (${isLong ? 'Long' : 'Court'}): ${prime} â‚¬`);
+                rules.push(`Forfait Samedi (${isLong ? 'Long' : 'Court'}): ${prime} €`);
             } else {
                 const cfg = appState.settings.forfaits.semaine;
                 prime = isLong ? cfg.long : cfg.court;
                 recup = 0;
-                rules.push(`Forfait Semaine (${isLong ? 'Long' : 'Court'}): ${prime} â‚¬`);
+                rules.push(`Forfait Semaine (${isLong ? 'Long' : 'Court'}): ${prime} €`);
             }
 
             if (!isSundayOrHoliday) {
@@ -699,7 +699,7 @@
                 }
                 if (hasNightOverlap) {
                     prime += appState.settings.majorNuit;
-                    rules.push(`Majoration nuit (+${appState.settings.majorNuit} â‚¬)`);
+                    rules.push(`Majoration nuit (+${appState.settings.majorNuit} €)`);
                 }
             }
 
@@ -767,9 +767,9 @@
             }
 
             const calc = calculateRules({ type, dateDebut, dateFin, heureDebut, heureFin });
-            document.getElementById('calc-prime').innerText = `${calc.prime} â‚¬`;
+            document.getElementById('calc-prime').innerText = `${calc.prime} €`;
             document.getElementById('calc-recup').innerText = `${calc.recup} j`;
-            document.getElementById('calc-rules').innerHTML = calc.rules.map(r => `â€¢ ${r}`).join('<br>');
+            document.getElementById('calc-rules').innerHTML = calc.rules.map(r => `• ${r}`).join('<br>');
         }
 
         function saveIntervention(e) {
@@ -816,7 +816,7 @@
         function confirmDeleteIntervention() {
             const editId = document.getElementById('edit-id').value;
             if (!editId) return;
-            if (confirm("ÃŠtes-vous sÃ»r de vouloir supprimer cette intervention ?")) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer cette intervention ?")) {
                 appState.interventions = appState.interventions.filter(i => i.id !== editId);
                 saveToLocalStorage();
                 showScreen('list');
@@ -870,15 +870,15 @@
             });
 
             filtered.sort((a,b) => new Date(b.dateDebut) - new Date(a.dateDebut));
-            document.getElementById('counter-badge').innerText = `${filtered.length} intervention${filtered.length > 1 ? 's' : ''} affichÃ©e${filtered.length > 1 ? 's' : ''}`;
+            document.getElementById('counter-badge').innerText = `${filtered.length} intervention${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}`;
 
             filtered.forEach(item => {
                 const limitDateManager = get10thWorkingDayOfMonth(item.dateDebut);
                 const isLateManager = item.validation.status === 'EN_ATTENTE' && new Date().toISOString().split('T')[0] > limitDateManager;
                 const moisPaie = item.moisPaieEstime;
-                const valDateText = (item.validation && item.validation.date) ? `ValidÃ©e le : ${item.validation.date}` : 'Validation manager non renseignÃ©e';
+                const valDateText = (item.validation && item.validation.date) ? `Validée le : ${item.validation.date}` : 'Validation manager non renseignée';
 
-                const rulesHtml = (item.rules || []).map(r => `â€¢ ${r}`).join('<br>');
+                const rulesHtml = (item.rules || []).map(r => `• ${r}`).join('<br>');
                 const safeTypeLabel = TYPE_LABELS[item.type] || item.type;
 
                 const card = document.createElement('div');
@@ -887,30 +887,30 @@
                     <div class="inter-header" onclick="this.parentElement.classList.toggle('open')">
                         <div class="inter-header-info">
                             <h3>${item.libelle}</h3>
-                            <p>${item.dateDebut} â€¢ ${safeTypeLabel}</p>
+                            <p>${item.dateDebut} • ${safeTypeLabel}</p>
                         </div>
                         <div class="inter-badges">
-                            <div style="font-weight:700; color:var(--primary);">${item.prime} â‚¬</div>
+                            <div style="font-weight:700; color:var(--primary);">${item.prime} €</div>
                             <span class="badge ${item.paie.status === 'PAYEE' ? 'badge-ok' : (isLateManager ? 'badge-alert' : 'badge-pending')}">
-                                ${item.paie.status === 'PAYEE' ? 'PayÃ©e' : (item.validation.status === 'VALIDEE' ? 'ValidÃ©e' : 'En Attente')}
+                                ${item.paie.status === 'PAYEE' ? 'Payée' : (item.validation.status === 'VALIDEE' ? 'Validée' : 'En Attente')}
                             </span>
                         </div>
                     </div>
                     <div class="inter-details">
-                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Heures / DurÃ©e :</strong> ${item.heureDebut || '--:--'} - ${item.heureFin || '--:--'} (${item.durationHours || 1}h)</p>
-                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>RÃ©cupÃ©ration acquise :</strong> ${item.recup || 0} j</p>
-                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Mois de paie estimÃ© :</strong> <span style="color:var(--primary); font-weight:700;">${moisPaie}</span></p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Heures / Durée :</strong> ${item.heureDebut || '--:--'} - ${item.heureFin || '--:--'} (${item.durationHours || 1}h)</p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Récupération acquise :</strong> ${item.recup || 0} j</p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Mois de paie estimé :</strong> <span style="color:var(--primary); font-weight:700;">${moisPaie}</span></p>
                         <p style="font-size: calc(var(--font-scale) * 0.8); color:var(--text-muted); margin-bottom:6px;">${valDateText}</p>
                         <div style="background:#fff; padding:12px; border-radius:10px; margin-bottom:12px; font-size: calc(var(--font-scale) * 0.8); color:var(--text-muted); border:1px solid #e2e8f0;">
                             ${rulesHtml}
                         </div>
                         <div class="form-row" style="margin-bottom:8px;">
-                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'DECLARER')">${item.declaration.status === 'DECLAREE' ? 'âœ“ DÃ©clarÃ©e' : 'DÃ©clarer'}</button>
-                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'VALIDER')">${item.validation.status === 'VALIDEE' ? 'âœ“ ValidÃ©e' : 'Valider Manager'}</button>
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'DECLARER')">${item.declaration.status === 'DECLAREE' ? '✓ Déclarée' : 'Déclarer'}</button>
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'VALIDER')">${item.validation.status === 'VALIDEE' ? '✓ Validée' : 'Valider Manager'}</button>
                         </div>
                         <div class="form-row">
-                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'PAYEE')">${item.paie.status === 'PAYEE' ? 'âœ“ PayÃ©e' : 'Marquer PayÃ©e'}</button>
-                            <button class="btn" onclick="editIntervention('${item.id}')">Ã‰diter</button>
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'PAYEE')">${item.paie.status === 'PAYEE' ? '✓ Payée' : 'Marquer Payée'}</button>
+                            <button class="btn" onclick="editIntervention('${item.id}')">Éditer</button>
                         </div>
                     </div>
                 `;
@@ -941,7 +941,7 @@
                     totalRecupNonPayee += (i.recup || 0);
                 }
             });
-            document.getElementById('kpi-primes-attente').innerText = `${primesAttente} â‚¬`;
+            document.getElementById('kpi-primes-attente').innerText = `${primesAttente} €`;
             document.getElementById('kpi-solde-recup').innerText = `${totalRecupNonPayee} j`;
         }
 
@@ -957,7 +957,7 @@
             document.getElementById('cfg-mad-sem').value = appState.settings.madSemaine;
             document.getElementById('cfg-mad-we').value = appState.settings.madWeekEnd;
             document.getElementById('cfg-nuit').value = appState.settings.majorNuit;
-            document.getElementById('cfg-sem-forfaits').value = `${appState.settings.forfaits.semaine.court}â‚¬ / ${appState.settings.forfaits.semaine.long}â‚¬`;
+            document.getElementById('cfg-sem-forfaits').value = `${appState.settings.forfaits.semaine.court}€ / ${appState.settings.forfaits.semaine.long}€`;
             document.getElementById('font-size-selector').value = appState.fontSize || 'font-normal';
         }
 
@@ -970,10 +970,10 @@
             saveToLocalStorage();
         }
 
-        function importCSVPlÃ©iades() {
+        function importCSVPléiades() {
             const fileInput = document.getElementById('file-csv-pleiades');
             const file = fileInput.files[0];
-            if (!file) return alert('SÃ©lectionnez un fichier CSV.');
+            if (!file) return alert('Sélectionnez un fichier CSV.');
             const reader = new FileReader();
             reader.onload = function(e) {
                 const lines = e.target.result.split('\n');
@@ -989,17 +989,17 @@
                             type: 'SITE_REMOTE', libelle: cols[2] || 'Intervention RH',
                             dateDebut: dateRH, dateFin: dateRH, heureDebut: cols[6] || "00:00", heureFin: cols[7] || "00:00",
                             prime: parseFloat((cols[9] || '0').replace(',', '.')), recup: parseFloat((cols[10] || '0').replace(',', '.')),
-                            durationHours: 1.0, rules: ["ImportÃ© depuis PlÃ©iades RH"],
+                            durationHours: 1.0, rules: ["Importé depuis Pléiades RH"],
                             declaration: { status: 'DECLAREE', date: dateRH },
                             validation: { status: valDateRH ? 'VALIDEE' : 'EN_ATTENTE', date: valDateRH },
-                            paie: { status: cols[11] === 'TraitÃ©e' ? 'PAYEE' : 'A_VERIFIER', date: null },
+                            paie: { status: cols[11] === 'Traitée' ? 'PAYEE' : 'A_VERIFIER', date: null },
                             moisPaieEstime: getEstimatedPayMonth(dateRH, valDateRH)
                         });
                         count++;
                     }
                 });
                 saveToLocalStorage();
-                alert(`${count} interventions importÃ©es !`);
+                alert(`${count} interventions importées !`);
                 showScreen('home');
             };
             reader.readAsText(file, 'ISO-8859-1');
@@ -1008,12 +1008,12 @@
         function importDataJSON() {
             const fileInput = document.getElementById('file-json-import');
             const file = fileInput.files[0];
-            if (!file) return alert('SÃ©lectionnez un fichier JSON.');
+            if (!file) return alert('Sélectionnez un fichier JSON.');
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const parsed = JSON.parse(e.target.result);
-                    if (parsed.interventions) { appState = parsed; saveToLocalStorage(); alert('Restauration rÃ©ussie !'); showScreen('home'); }
+                    if (parsed.interventions) { appState = parsed; saveToLocalStorage(); alert('Restauration réussie !'); showScreen('home'); }
                 } catch(err) { alert('Fichier JSON invalide.'); }
             };
             reader.readAsText(file);
@@ -1044,7 +1044,7 @@
 
             const months = Object.keys(monthlyPrimes).sort();
             if (months.length === 0) {
-                primesContainer.innerHTML = recupContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Aucune donnÃ©e.</p>';
+                primesContainer.innerHTML = recupContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Aucune donnée.</p>';
                 return;
             }
 
@@ -1052,7 +1052,7 @@
             let svgPrimes = `<svg width="100%" height="100%" viewBox="0 0 ${months.length * 60 + 40} 180">`;
             months.forEach((m, idx) => {
                 const val = monthlyPrimes[m], height = (val / maxPrime) * 120, x = idx * 60 + 30, y = 140 - height;
-                svgPrimes += `<rect x="${x}" y="${y}" width="34" height="${height}" fill="#3b82f6" rx="8" style="cursor:pointer;" onclick="filterByMonth('${m}')"/><text x="${x + 17}" y="${y - 6}" font-size="10" text-anchor="middle" font-weight="bold" fill="#0f172a">${val}â‚¬</text><text x="${x + 17}" y="160" font-size="10" text-anchor="middle" fill="#64748b">${m.substring(5)}</text>`;
+                svgPrimes += `<rect x="${x}" y="${y}" width="34" height="${height}" fill="#3b82f6" rx="8" style="cursor:pointer;" onclick="filterByMonth('${m}')"/><text x="${x + 17}" y="${y - 6}" font-size="10" text-anchor="middle" font-weight="bold" fill="#0f172a">${val}€</text><text x="${x + 17}" y="160" font-size="10" text-anchor="middle" fill="#64748b">${m.substring(5)}</text>`;
             });
             primesContainer.innerHTML = svgPrimes + `</svg>`;
 
@@ -1089,7 +1089,7 @@
         
         function loadFromLocalStorage() {
             try {
-                // Recherche progressive dans les clÃ©s prÃ©cÃ©dentes pour ne rien perdre
+                // Recherche progressive dans les clés précédentes pour ne rien perdre
                 const data = localStorage.getItem('app_suivi_interventions_v8.3') || 
                              localStorage.getItem('app_suivi_interventions_v8.2') || 
                              localStorage.getItem('app_suivi_interventions_v8.1') || 
