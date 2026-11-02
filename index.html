@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi Personnel des Interventions - V7</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --border-radius: 16px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --font-scale: 1rem;
+        }
+
+        body.font-small { --font-scale: 0.875rem; }
+        body.font-normal { --font-scale: 1rem; }
+        body.font-large { --font-scale: 1.125rem; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            font-size: var(--font-scale);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 85px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #ffffff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: calc(var(--font-scale) * 1.25);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .container {
+            padding: 20px 16px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* KPI Dashboard Home */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-left: 5px solid var(--primary);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .kpi-card:active {
+            transform: scale(0.97);
+        }
+
+        .kpi-card.warning { border-left-color: var(--warning); }
+        .kpi-card.success { border-left-color: var(--success); }
+
+        .kpi-label {
+            font-size: calc(var(--font-scale) * 0.75);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .kpi-value {
+            font-size: calc(var(--font-scale) * 1.5);
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        /* Nav Home Grid */
+        .nav-buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .nav-btn-large {
+            background: var(--card-bg);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: transform 0.2s ease;
+        }
+
+        .nav-btn-large:active {
+            transform: scale(0.98);
+            background: #f8fafc;
+        }
+
+        .nav-btn-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: calc(var(--font-scale) * 1.4);
+            font-weight: bold;
+        }
+
+        .nav-btn-text h2 {
+            font-size: calc(var(--font-scale) * 1.05);
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .nav-btn-text p {
+            font-size: calc(var(--font-scale) * 0.85);
+            color: var(--text-muted);
+        }
+
+        /* Navigation Bar Bottom */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(226, 232, 240, 0.8);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: calc(var(--font-scale) * 0.7);
+            color: var(--text-muted);
+            text-decoration: none;
+            cursor: pointer;
+            width: 25%;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .bottom-nav-icon {
+            font-size: calc(var(--font-scale) * 1.3);
+            margin-bottom: 3px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: calc(var(--font-scale) * 0.85);
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: var(--font-scale);
+            background: #ffffff;
+            color: var(--text-color);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Cards & Recap */
+        .recap-box {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .highlight-amounts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .val-prime {
+            font-size: calc(var(--font-scale) * 1.5);
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .val-recup {
+            font-size: calc(var(--font-scale) * 1.5);
+            font-weight: 800;
+            color: var(--success);
+        }
+
+        .rules-list {
+            font-size: calc(var(--font-scale) * 0.85);
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: var(--font-scale);
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+            transition: background 0.2s ease;
+        }
+
+        .btn:hover { background: var(--primary-hover); }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-color);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover { background: #cbd5e1; }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+        }
+
+        /* List Items Accordion */
+        .inter-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        .inter-header {
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: #ffffff;
+        }
+
+        .inter-header-info h3 {
+            font-size: calc(var(--font-scale) * 1);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .inter-header-info p {
+            font-size: calc(var(--font-scale) * 0.8);
+            color: var(--text-muted);
+        }
+
+        .inter-badges {
+            text-align: right;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: calc(var(--font-scale) * 0.7);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-pending { background: #fef3c7; color: #b45309; }
+        .badge-ok { background: #d1fae5; color: #047857; }
+        .badge-alert { background: #fee2e2; color: #b91c1c; }
+
+        .inter-details {
+            padding: 20px;
+            border-top: 1px solid #f1f5f9;
+            background: #f8fafc;
+            display: none;
+        }
+
+        .inter-card.open .inter-details {
+            display: block;
+        }
+
+        .chart-box {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 220px;
+            margin-top: 12px;
+            overflow-x: auto;
+        }
+
+        .counter-badge {
+            font-size: calc(var(--font-scale) * 0.85);
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="font-normal">
+
+    <header>
+        <h1 id="page-title">Suivi Interventions</h1>
+    </header>
+
+    <div class="container">
+
+        <!-- ECRAN 1 : ACCUEIL -->
+        <div id="screen-home" class="screen active">
+            <div class="kpi-grid">
+                <div class="kpi-card warning" onclick="filterPendingPrimes()">
+                    <div class="kpi-label">Primes en attente</div>
+                    <div class="kpi-value" id="kpi-primes-attente">0 €</div>
+                </div>
+                <div class="kpi-card success" onclick="showScreen('list')">
+                    <div class="kpi-label">Récup. En Cours</div>
+                    <div class="kpi-value" id="kpi-solde-recup">0 j</div>
+                </div>
+            </div>
+
+            <div class="nav-buttons-grid">
+                <div class="nav-btn-large" onclick="openNewIntervention()">
+                    <div class="nav-btn-content">
+                        <div class="nav-btn-icon">+</div>
+                        <div class="nav-btn-text">
+                            <h2>Nouvelle intervention</h2>
+                            <p>Saisir rapidement une garde/astreinte</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-btn-large" onclick="showScreen('list')">
+                    <div class="nav-btn-content">
+                        <div class="nav-btn-icon">📋</div>
+                        <div class="nav-btn-text">
+                            <h2>Mes interventions</h2>
+                            <p>Suivi, validation & paie estimée</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-btn-large" onclick="showScreen('charts')">
+                    <div class="nav-btn-content">
+                        <div class="nav-btn-icon">📊</div>
+                        <div class="nav-btn-text">
+                            <h2>Graphiques</h2>
+                            <p>Évolution des primes et récupérations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-btn-large" onclick="showScreen('settings')">
+                    <div class="nav-btn-content">
+                        <div class="nav-btn-icon">⚙️</div>
+                        <div class="nav-btn-text">
+                            <h2>Paramètres & Règles</h2>
+                            <p>Affichage, forfaits, CSV Pléiades</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ECRAN 2 : SAISIE / EDITION / SUPPRESSION -->
+        <div id="screen-form" class="screen">
+            <form id="inter-form" onsubmit="saveIntervention(event)">
+                <input type="hidden" id="edit-id">
+
+                <div class="form-group">
+                    <label for="type-inter">Type d'intervention</label>
+                    <select id="type-inter" onchange="onTypeChange()" required>
+                        <option value="EMO">EMO (07h00 - 08h00)</option>
+                        <option value="ASTREINTE_SEMAINE">Astreinte semaine complète</option>
+                        <option value="SITE_REMOTE" selected>Intervention Site / À distance</option>
+                        <option value="MAD_JOUR">Mise à disposition / Astreinte Jour</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="libelle">Libellé / Description</label>
+                    <input type="text" id="libelle" placeholder="Ex: Incident prod Ekara" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date-debut">Date début</label>
+                        <input type="date" id="date-debut" onchange="onDateOrTimeChange()" required>
+                    </div>
+                    <div class="form-group" id="grp-date-fin">
+                        <label for="date-fin">Date fin</label>
+                        <input type="date" id="date-fin" onchange="onManualDateFinChange()" required>
+                    </div>
+                </div>
+
+                <div class="form-row" id="grp-heures">
+                    <div class="form-group">
+                        <label for="heure-debut">Heure début</label>
+                        <input type="time" id="heure-debut" onchange="onDateOrTimeChange()">
+                    </div>
+                    <div class="form-group">
+                        <label for="heure-fin">Heure fin</label>
+                        <input type="time" id="heure-fin" onchange="onDateOrTimeChange()">
+                    </div>
+                </div>
+
+                <div class="recap-box">
+                    <div class="highlight-amounts">
+                        <div>
+                            <div class="kpi-label">Prime Estimée</div>
+                            <div class="val-prime" id="calc-prime">0 €</div>
+                        </div>
+                        <div>
+                            <div class="kpi-label">Récupération</div>
+                            <div class="val-recup" id="calc-recup">0 j</div>
+                        </div>
+                    </div>
+                    <div class="rules-list" id="calc-rules">Ajustez les paramètres pour calculer.</div>
+                </div>
+
+                <button type="submit" class="btn">Enregistrer l'intervention</button>
+                <button type="button" id="btn-delete" class="btn btn-danger" style="display: none;" onclick="confirmDeleteIntervention()">Supprimer l'intervention</button>
+            </form>
+        </div>
+
+        <!-- ECRAN 3 : LISTE DES INTERVENTIONS -->
+        <div id="screen-list" class="screen">
+            <div class="form-row" style="margin-bottom: 12px;">
+                <input type="text" id="search-filter" placeholder="Rechercher (ex: EMO, Incident...)" oninput="renderList()">
+                <select id="status-filter" onchange="renderList()">
+                    <option value="A_DECLARER" selected>1. À déclarer dans Pléiade</option>
+                    <option value="EN_ATTENTE_MANAGER">2. En attente de validation Manager</option>
+                    <option value="A_VERIFIER_PAIE">3. À vérifier dans la Paie</option>
+                    <option value="PAYEE">4. Payée / Clôturée</option>
+                    <option value="TOUS">5. Toutes les interventions</option>
+                </select>
+            </div>
+
+            <div class="counter-badge" id="counter-badge">0 intervention affichée</div>
+            <div id="interventions-container"></div>
+        </div>
+
+        <!-- ECRAN 4 : GRAPHIQUES -->
+        <div id="screen-charts" class="screen">
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="chart-year-filter">Période du graphique</label>
+                <select id="chart-year-filter" onchange="renderCharts()">
+                    <option value="LAST_12" selected>12 derniers mois glissants</option>
+                    <option value="2026">Année 2026</option>
+                    <option value="2025">Année 2025</option>
+                </select>
+            </div>
+
+            <div class="chart-box">
+                <div class="kpi-label" style="margin-bottom: 10px;">Évolution Mensuelle des Primes (€)</div>
+                <div class="chart-container" id="chart-primes-container"></div>
+            </div>
+            <div class="chart-box">
+                <div class="kpi-label" style="margin-bottom: 10px;">Récupérations Acquises par Mois (Jours)</div>
+                <div class="chart-container" id="chart-recup-container"></div>
+            </div>
+        </div>
+
+        <!-- ECRAN 5 : PARAMÈTRES & CONFIG -->
+        <div id="screen-settings" class="screen">
+            <div class="chart-box">
+                <div class="kpi-label" style="margin-bottom: 12px;">Préférence d'Affichage (Taille de police)</div>
+                <div class="form-group">
+                    <select id="font-size-selector" onchange="changeFontSize(this.value)">
+                        <option value="font-small">Compacte</option>
+                        <option value="font-normal" selected>Normale</option>
+                        <option value="font-large">Grand confort</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="kpi-label" style="margin-bottom: 12px;">Moteur de Règles & Forfaits</div>
+                <div class="form-row">
+                    <div class="form-group"><label>Prime EMO (€)</label><input type="number" id="cfg-emo" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>Astreinte Semaine (€)</label><input type="number" id="cfg-astreinte" onchange="saveSettingsFromUI()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>MAD Semaine (€)</label><input type="number" id="cfg-mad-sem" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>MAD WE / Férié (€)</label><input type="number" id="cfg-mad-we" onchange="saveSettingsFromUI()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Majoration Nuit (€)</label><input type="number" id="cfg-nuit" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>Semaine Court / Long (€)</label><input type="text" id="cfg-sem-forfaits" disabled style="background:#f1f5f9;"></div>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="kpi-label" style="margin-bottom: 12px;">Import / Export Données</div>
+                <div class="form-group">
+                    <label style="font-size: calc(var(--font-scale) * 0.8);">Import CSV Pléiades</label>
+                    <input type="file" id="file-csv-pleiades" accept=".csv" style="margin-bottom: 8px;">
+                    <button class="btn btn-secondary" onclick="importCSVPléiades()">Charger CSV Pléiades</button>
+                </div>
+                <div class="form-group" style="margin-top: 12px;">
+                    <label style="font-size: calc(var(--font-scale) * 0.8);">Restauration JSON</label>
+                    <input type="file" id="file-json-import" accept=".json" style="margin-bottom: 8px;">
+                    <button class="btn btn-secondary" onclick="importDataJSON()">Restaurer JSON</button>
+                </div>
+                <div class="form-row" style="margin-top: 12px;">
+                    <button class="btn btn-secondary" onclick="exportDataJSON()">Export JSON</button>
+                    <button class="btn btn-secondary" onclick="exportDataCSV()">Export CSV</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BARRE DE NAVIGATION INFÉRIEURE -->
+    <div class="bottom-nav">
+        <div class="bottom-nav-item active" id="nav-home" onclick="showScreen('home')">
+            <div class="bottom-nav-icon">🏠</div>
+            <div>Accueil</div>
+        </div>
+        <div class="bottom-nav-item" id="nav-list" onclick="showScreen('list')">
+            <div class="bottom-nav-icon">📋</div>
+            <div>Suivi</div>
+        </div>
+        <div class="bottom-nav-item" id="nav-charts" onclick="showScreen('charts')">
+            <div class="bottom-nav-icon">📊</div>
+            <div>Stats</div>
+        </div>
+        <div class="bottom-nav-item" id="nav-settings" onclick="showScreen('settings')">
+            <div class="bottom-nav-icon">⚙️</div>
+            <div>Config</div>
+        </div>
+    </div>
+
+    <script>
+        let appState = {
+            fontSize: 'font-normal',
+            interventions: [],
+            settings: {
+                emoPrime: 35,
+                astreinteSemainePrime: 350,
+                madSemaine: 35,
+                madWeekEnd: 80,
+                majorNuit: 40,
+                forfaits: {
+                    semaine: { court: 120, long: 240, recupCourt: 0, recupLong: 0 },
+                    samedi: { court: 125, long: 250, recupCourt: 0.5, recupLong: 1.0 },
+                    dimanche: { court: 210, long: 420, recupCourt: 0.5, recupLong: 1.0 }
+                }
+            }
+        };
+
+        let userManualDateFin = false;
+
+        const TYPE_LABELS = {
+            'EMO': 'EMO',
+            'ASTREINTE_SEMAINE': 'Astreinte semaine complète',
+            'SITE_REMOTE': 'Intervention Site / À distance',
+            'MAD_JOUR': 'Mise à disposition / Astreinte Jour'
+        };
+
+        function getFrenchHolidays(year) {
+            const holidays = [
+                `${year}-01-01`, `${year}-05-01`, `${year}-05-08`, 
+                `${year}-07-14`, `${year}-08-15`, `${year}-11-01`, 
+                `${year}-11-11`, `${year}-12-25`
+            ];
+            const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+            const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+            const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+            const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7;
+            const m = Math.floor((a + 11 * h + 22 * l) / 451);
+            const month = Math.floor((h + l - 7 * m + 114) / 31);
+            const day = ((h + l - 7 * m + 114) % 31) + 1;
+            const paques = new Date(year, month - 1, day);
+            const paquesLundi = new Date(paques); paquesLundi.setDate(paques.getDate() + 1);
+            const ascension = new Date(paques); ascension.setDate(paques.getDate() + 39);
+            const pentecote = new Date(paques); pentecote.setDate(paques.getDate() + 50);
+            const formatDate = d => d.toISOString().split('T')[0];
+            holidays.push(formatDate(paquesLundi), formatDate(ascension), formatDate(pentecote));
+            return holidays;
+        }
+
+        function isFrenchHoliday(dateStr) {
+            if (!dateStr) return false;
+            return getFrenchHolidays(parseInt(dateStr.split('-')[0])).includes(dateStr);
+        }
+
+        function get10thWorkingDayOfMonth(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            const year = d.getFullYear(), month = d.getMonth();
+            const holidays = getFrenchHolidays(year);
+            let workingDaysCount = 0, current = new Date(year, month, 1);
+            while (workingDaysCount < 10) {
+                const dayOfWeek = current.getDay();
+                const curStr = current.toISOString().split('T')[0];
+                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !holidays.includes(curStr)) workingDaysCount++;
+                if (workingDaysCount === 10) break;
+                current.setDate(current.getDate() + 1);
+            }
+            return current.toISOString().split('T')[0];
+        }
+
+        function getEstimatedPayMonth(dateDebutStr, validationDateStr) {
+            if (!dateDebutStr) return 'Période à confirmer';
+            const startDate = new Date(dateDebutStr);
+            const m = startDate.getMonth(), y = startDate.getFullYear();
+            const limit10thDay = get10thWorkingDayOfMonth(dateDebutStr);
+            const valDate = validationDateStr || new Date().toISOString().split('T')[0];
+            let targetDate = new Date(y, m, 1);
+            if (valDate > limit10thDay) targetDate.setMonth(targetDate.getMonth() + 1);
+            return `${String(targetDate.getMonth() + 1).padStart(2, '0')}/${targetDate.getFullYear()}`;
+        }
+
+        function calculateRules(data) {
+            const type = data.type;
+            let prime = 0, recup = 0, rules = [];
+
+            if (type === 'EMO') return { prime: appState.settings.emoPrime, recup: 0, durationHours: 1.0, rules: ["Forfait EMO (07h00 - 08h00)"] };
+            if (type === 'ASTREINTE_SEMAINE') return { prime: appState.settings.astreinteSemainePrime, recup: 0, durationHours: 168.0, rules: ["Forfait Astreinte Semaine"] };
+            if (type === 'MAD_JOUR') {
+                const day = new Date(data.dateDebut).getDay(), isHoliday = isFrenchHoliday(data.dateDebut);
+                prime = (day === 0 || day === 6 || isHoliday) ? appState.settings.madWeekEnd : appState.settings.madSemaine;
+                return { prime, recup: 0, durationHours: 24.0, rules: [`Mise à disposition (${prime} €)`] };
+            }
+
+            const dtStart = new Date(`${data.dateDebut}T${data.heureDebut}:00`);
+            const dtEnd = new Date(`${data.dateFin}T${data.heureFin}:00`);
+            const durationHours = Math.max(0, (dtEnd - dtStart) / (1000 * 60 * 60));
+            const isLong = durationHours >= 4.0;
+            const startHoliday = isFrenchHoliday(data.dateDebut), endHoliday = isFrenchHoliday(data.dateFin);
+            const startDay = new Date(data.dateDebut).getDay(), endDay = new Date(data.dateFin).getDay();
+            const isSundayOrHoliday = (startDay === 0 || endDay === 0 || startHoliday || endHoliday);
+
+            if (isSundayOrHoliday) {
+                const cfg = appState.settings.forfaits.dimanche;
+                prime = isLong ? cfg.long : cfg.court;
+                recup = isLong ? cfg.recupLong : cfg.recupCourt;
+                rules.push(`Forfait Dimanche/Férié (${isLong ? 'Long' : 'Court'}): ${prime} €`);
+            } else if (endDay === 6 || startDay === 6) {
+                const cfg = appState.settings.forfaits.samedi;
+                prime = isLong ? cfg.long : cfg.court;
+                recup = isLong ? cfg.recupLong : cfg.recupCourt;
+                rules.push(`Forfait Samedi (${isLong ? 'Long' : 'Court'}): ${prime} €`);
+            } else {
+                const cfg = appState.settings.forfaits.semaine;
+                prime = isLong ? cfg.long : cfg.court;
+                recup = 0;
+                rules.push(`Forfait Semaine (${isLong ? 'Long' : 'Court'}): ${prime} €`);
+            }
+
+            if (!isSundayOrHoliday) {
+                let hasNightOverlap = false, cur = new Date(dtStart);
+                while (cur < dtEnd) {
+                    const h = cur.getHours();
+                    if (h >= 21 || h < 7) { hasNightOverlap = true; break; }
+                    cur.setTime(cur.getTime() + 15 * 60 * 1000);
+                }
+                if (hasNightOverlap) {
+                    prime += appState.settings.majorNuit;
+                    rules.push(`Majoration nuit (+${appState.settings.majorNuit} €)`);
+                }
+            }
+
+            return { prime, recup, durationHours, rules };
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById(`screen-${screenId}`).classList.add('active');
+            const navItem = document.getElementById(`nav-${screenId}`);
+            if (navItem) navItem.classList.add('active');
+
+            if (screenId === 'home') updateKPIs();
+            if (screenId === 'list') renderList();
+            if (screenId === 'charts') renderCharts();
+            if (screenId === 'settings') loadSettingsToUI();
+        }
+
+        function filterPendingPrimes() {
+            showScreen('list');
+            document.getElementById('status-filter').value = 'A_DECLARER';
+            renderList();
+        }
+
+        function openNewIntervention() {
+            document.getElementById('inter-form').reset();
+            document.getElementById('edit-id').value = '';
+            document.getElementById('btn-delete').style.display = 'none';
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date-debut').value = today;
+            document.getElementById('date-fin').value = today;
+            document.getElementById('heure-debut').value = "21:00";
+            document.getElementById('heure-fin').value = "01:00";
+            userManualDateFin = false;
+            onTypeChange();
+            showScreen('form');
+        }
+
+        function onTypeChange() {
+            const type = document.getElementById('type-inter').value;
+            document.getElementById('grp-heures').style.display = (['EMO', 'ASTREINTE_SEMAINE', 'MAD_JOUR'].includes(type)) ? 'none' : 'grid';
+            document.getElementById('grp-date-fin').style.display = document.getElementById('grp-heures').style.display;
+            onDateOrTimeChange();
+        }
+
+        function onManualDateFinChange() { userManualDateFin = true; onDateOrTimeChange(); }
+
+        function onDateOrTimeChange() {
+            const type = document.getElementById('type-inter').value;
+            const dateDebut = document.getElementById('date-debut').value;
+            let dateFin = document.getElementById('date-fin').value;
+            const heureDebut = document.getElementById('heure-debut').value, heureFin = document.getElementById('heure-fin').value;
+
+            if (type === 'SITE_REMOTE' && !userManualDateFin && dateDebut && heureDebut && heureFin) {
+                if (heureFin < heureDebut) {
+                    const d = new Date(dateDebut); d.setDate(d.getDate() + 1);
+                    dateFin = d.toISOString().split('T')[0];
+                    document.getElementById('date-fin').value = dateFin;
+                } else {
+                    document.getElementById('date-fin').value = dateDebut;
+                    dateFin = dateDebut;
+                }
+            }
+
+            const calc = calculateRules({ type, dateDebut, dateFin, heureDebut, heureFin });
+            document.getElementById('calc-prime').innerText = `${calc.prime} €`;
+            document.getElementById('calc-recup').innerText = `${calc.recup} j`;
+            document.getElementById('calc-rules').innerHTML = calc.rules.map(r => `• ${r}`).join('<br>');
+        }
+
+        function saveIntervention(e) {
+            e.preventDefault();
+            const editId = document.getElementById('edit-id').value;
+            const type = document.getElementById('type-inter').value, libelle = document.getElementById('libelle').value;
+            const dateDebut = document.getElementById('date-debut').value;
+            let dateFin = document.getElementById('date-fin').value, heureDebut = document.getElementById('heure-debut').value, heureFin = document.getElementById('heure-fin').value;
+
+            if (type === 'EMO') { dateFin = dateDebut; heureDebut = "07:00"; heureFin = "08:00"; }
+            const calc = calculateRules({ type, dateDebut, dateFin, heureDebut, heureFin });
+
+            if (editId) {
+                const idx = appState.interventions.findIndex(i => i.id === editId);
+                if (idx !== -1) {
+                    appState.interventions[idx] = {
+                        ...appState.interventions[idx],
+                        type, libelle, dateDebut, dateFin, heureDebut, heureFin,
+                        prime: calc.prime, recup: calc.recup, durationHours: calc.durationHours, rules: calc.rules,
+                        moisPaieEstime: getEstimatedPayMonth(dateDebut, appState.interventions[idx].validation.date)
+                    };
+                }
+            } else {
+                appState.interventions.push({
+                    id: 'INT-' + Date.now(), type, libelle, dateDebut, dateFin, heureDebut, heureFin,
+                    prime: calc.prime, recup: calc.recup, durationHours: calc.durationHours, rules: calc.rules,
+                    declaration: { status: 'A_DECLARER', date: null },
+                    validation: { status: 'EN_ATTENTE', date: null },
+                    paie: { status: 'A_VERIFIER', date: null },
+                    moisPaieEstime: getEstimatedPayMonth(dateDebut, null)
+                });
+            }
+
+            saveToLocalStorage();
+            showScreen('list');
+        }
+
+        function confirmDeleteIntervention() {
+            const editId = document.getElementById('edit-id').value;
+            if (!editId) return;
+            if (confirm("Êtes-vous sûr de vouloir supprimer cette intervention ?")) {
+                appState.interventions = appState.interventions.filter(i => i.id !== editId);
+                saveToLocalStorage();
+                showScreen('list');
+            }
+        }
+
+        function editIntervention(id) {
+            const item = appState.interventions.find(i => i.id === id);
+            if (!item) return;
+            document.getElementById('edit-id').value = item.id;
+            document.getElementById('type-inter').value = item.type;
+            document.getElementById('libelle').value = item.libelle;
+            document.getElementById('date-debut').value = item.dateDebut;
+            document.getElementById('date-fin').value = item.dateFin;
+            document.getElementById('heure-debut').value = item.heureDebut;
+            document.getElementById('heure-fin').value = item.heureFin;
+            document.getElementById('btn-delete').style.display = 'block';
+            userManualDateFin = true;
+            onTypeChange();
+            showScreen('form');
+        }
+
+        function renderList() {
+            const container = document.getElementById('interventions-container');
+            const search = document.getElementById('search-filter').value.toLowerCase().trim();
+            const filter = document.getElementById('status-filter').value;
+            container.innerHTML = '';
+
+            const filtered = appState.interventions.filter(item => {
+                const typeLabel = (TYPE_LABELS[item.type] || item.type).toLowerCase();
+                const matchesSearch = !search || 
+                    item.libelle.toLowerCase().includes(search) || 
+                    item.type.toLowerCase().includes(search) || 
+                    typeLabel.includes(search) || 
+                    (item.dateDebut && item.dateDebut.includes(search));
+
+                if (!matchesSearch) return false;
+                if (filter === 'A_DECLARER') return item.declaration.status === 'A_DECLARER';
+                if (filter === 'EN_ATTENTE_MANAGER') return item.validation.status === 'EN_ATTENTE' && item.declaration.status === 'DECLAREE';
+                if (filter === 'A_VERIFIER_PAIE') return item.paie.status === 'A_VERIFIER' && item.validation.status === 'VALIDEE';
+                if (filter === 'PAYEE') return item.paie.status === 'PAYEE';
+                return true;
+            });
+
+            filtered.sort((a,b) => new Date(b.dateDebut) - new Date(a.dateDebut));
+            document.getElementById('counter-badge').innerText = `${filtered.length} intervention${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}`;
+
+            filtered.forEach(item => {
+                const limitDateManager = get10thWorkingDayOfMonth(item.dateDebut);
+                const isLateManager = item.validation.status === 'EN_ATTENTE' && new Date().toISOString().split('T')[0] > limitDateManager;
+                const moisPaie = item.moisPaieEstime || getEstimatedPayMonth(item.dateDebut, item.validation.date);
+
+                const card = document.createElement('div');
+                card.className = 'inter-card';
+                card.innerHTML = `
+                    <div class="inter-header" onclick="this.parentElement.classList.toggle('open')">
+                        <div class="inter-header-info">
+                            <h3>${item.libelle}</h3>
+                            <p>${item.dateDebut} • ${TYPE_LABELS[item.type] || item.type}</p>
+                        </div>
+                        <div class="inter-badges">
+                            <div style="font-weight:700; color:var(--primary);">${item.prime} €</div>
+                            <span class="badge ${item.paie.status === 'PAYEE' ? 'badge-ok' : (isLateManager ? 'badge-alert' : 'badge-pending')}">
+                                ${item.paie.status === 'PAYEE' ? 'Payée' : (item.validation.status === 'VALIDEE' ? 'Validée' : 'En Attente')}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="inter-details">
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Heures / Durée :</strong> ${item.heureDebut} - ${item.heureFin} (${item.durationHours}h)</p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Récupération acquise :</strong> ${item.recup || 0} j</p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Mois de paie estimé :</strong> <span style="color:var(--primary); font-weight:700;">${moisPaie}</span></p>
+                        <div style="background:#fff; padding:12px; border-radius:10px; margin-bottom:12px; font-size: calc(var(--font-scale) * 0.8); color:var(--text-muted); border:1px solid #e2e8f0;">
+                            ${(item.rules || []).map(r => `• ${r}`).join('<br>')}
+                        </div>
+                        <div class="form-row" style="margin-bottom:8px;">
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'DECLARER')">${item.declaration.status === 'DECLAREE' ? '✓ Déclarée' : 'Déclarer'}</button>
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'VALIDER')">${item.validation.status === 'VALIDEE' ? '✓ Validée' : 'Valider Manager'}</button>
+                        </div>
+                        <div class="form-row">
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'PAYEE')">${item.paie.status === 'PAYEE' ? '✓ Payée' : 'Marquer Payée'}</button>
+                            <button class="btn" onclick="editIntervention('${item.id}')">Éditer</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateAdminStatus(id, action) {
+            const item = appState.interventions.find(i => i.id === id);
+            if (!item) return;
+            const today = new Date().toISOString().split('T')[0];
+            if (action === 'DECLARER') { item.declaration.status = 'DECLAREE'; item.declaration.date = today; }
+            else if (action === 'VALIDER') { item.validation.status = 'VALIDEE'; item.validation.date = today; item.moisPaieEstime = getEstimatedPayMonth(item.dateDebut, today); }
+            else if (action === 'PAYEE') { item.paie.status = 'PAYEE'; item.paie.date = today; }
+            saveToLocalStorage();
+            renderList();
+        }
+
+        function updateKPIs() {
+            let primesAttente = 0, totalRecupNonPayee = 0;
+            appState.interventions.forEach(i => {
+                if (i.paie.status !== 'PAYEE') {
+                    primesAttente += (i.prime || 0);
+                    totalRecupNonPayee += (i.recup || 0);
+                }
+            });
+            document.getElementById('kpi-primes-attente').innerText = `${primesAttente} €`;
+            document.getElementById('kpi-solde-recup').innerText = `${totalRecupNonPayee} j`;
+        }
+
+        function changeFontSize(sizeClass) {
+            appState.fontSize = sizeClass;
+            document.body.className = sizeClass;
+            saveToLocalStorage();
+        }
+
+        function loadSettingsToUI() {
+            document.getElementById('cfg-emo').value = appState.settings.emoPrime;
+            document.getElementById('cfg-astreinte').value = appState.settings.astreinteSemainePrime;
+            document.getElementById('cfg-mad-sem').value = appState.settings.madSemaine;
+            document.getElementById('cfg-mad-we').value = appState.settings.madWeekEnd;
+            document.getElementById('cfg-nuit').value = appState.settings.majorNuit;
+            document.getElementById('cfg-sem-forfaits').value = `${appState.settings.forfaits.semaine.court}€ / ${appState.settings.forfaits.semaine.long}€`;
+            document.getElementById('font-size-selector').value = appState.fontSize || 'font-normal';
+        }
+
+        function saveSettingsFromUI() {
+            appState.settings.emoPrime = parseFloat(document.getElementById('cfg-emo').value) || 35;
+            appState.settings.astreinteSemainePrime = parseFloat(document.getElementById('cfg-astreinte').value) || 350;
+            appState.settings.madSemaine = parseFloat(document.getElementById('cfg-mad-sem').value) || 35;
+            appState.settings.madWeekEnd = parseFloat(document.getElementById('cfg-mad-we').value) || 80;
+            appState.settings.majorNuit = parseFloat(document.getElementById('cfg-nuit').value) || 40;
+            saveToLocalStorage();
+        }
+
+        function importCSVPléiades() {
+            const fileInput = document.getElementById('file-csv-pleiades');
+            const file = fileInput.files[0];
+            if (!file) return alert('Sélectionnez un fichier CSV.');
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const lines = e.target.result.split('\n');
+                let count = 0;
+                lines.forEach((line, idx) => {
+                    if (idx === 0 || !line.trim()) return;
+                    const cols = line.split(';').map(c => c.replace(/^"|"$/g, '').trim());
+                    if (cols.length >= 10) {
+                        const dateRH = cols[4] ? cols[4].split('/').reverse().join('-') : new Date().toISOString().split('T')[0];
+                        const valDateRH = cols[13] ? cols[13].split('/').reverse().join('-') : null;
+                        appState.interventions.push({
+                            id: 'INT-RH-' + Date.now() + '-' + idx,
+                            type: 'SITE_REMOTE', libelle: cols[2] || 'Intervention RH',
+                            dateDebut: dateRH, dateFin: dateRH, heureDebut: cols[6] || "00:00", heureFin: cols[7] || "00:00",
+                            prime: parseFloat((cols[9] || '0').replace(',', '.')), recup: parseFloat((cols[10] || '0').replace(',', '.')),
+                            durationHours: 1.0, rules: ["Importé depuis Pléiades RH"],
+                            declaration: { status: 'DECLAREE', date: dateRH },
+                            validation: { status: 'VALIDEE', date: valDateRH },
+                            paie: { status: cols[11] === 'Traitée' ? 'PAYEE' : 'A_VERIFIER', date: null },
+                            moisPaieEstime: getEstimatedPayMonth(dateRH, valDateRH)
+                        });
+                        count++;
+                    }
+                });
+                saveToLocalStorage();
+                alert(`${count} interventions importées !`);
+                showScreen('home');
+            };
+            reader.readAsText(file, 'ISO-8859-1');
+        }
+
+        function importDataJSON() {
+            const fileInput = document.getElementById('file-json-import');
+            const file = fileInput.files[0];
+            if (!file) return alert('Sélectionnez un fichier JSON.');
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.interventions) { appState = parsed; saveToLocalStorage(); alert('Restauration réussie !'); showScreen('home'); }
+                } catch(err) { alert('Fichier JSON invalide.'); }
+            };
+            reader.readAsText(file);
+        }
+
+        function renderCharts() {
+            const primesContainer = document.getElementById('chart-primes-container');
+            const recupContainer = document.getElementById('chart-recup-container');
+            const filterPeriod = document.getElementById('chart-year-filter').value;
+            const monthlyPrimes = {}, monthlyRecup = {};
+
+            appState.interventions.forEach(i => {
+                if (!i.dateDebut) return;
+                const monthKey = i.dateDebut.substring(0, 7), year = i.dateDebut.substring(0, 4);
+                if (filterPeriod === 'LAST_12') {
+                    const d = new Date(); d.setMonth(d.getMonth() - 12);
+                    if (monthKey < d.toISOString().substring(0, 7)) return;
+                } else if (filterPeriod !== 'TOUS' && year !== filterPeriod) return;
+
+                monthlyPrimes[monthKey] = (monthlyPrimes[monthKey] || 0) + (i.prime || 0);
+                monthlyRecup[monthKey] = (monthlyRecup[monthKey] || 0) + (i.recup || 0);
+            });
+
+            const months = Object.keys(monthlyPrimes).sort();
+            if (months.length === 0) {
+                primesContainer.innerHTML = recupContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Aucune donnée.</p>';
+                return;
+            }
+
+            const maxPrime = Math.max(...Object.values(monthlyPrimes), 100);
+            let svgPrimes = `<svg width="100%" height="100%" viewBox="0 0 ${months.length * 60 + 40} 180">`;
+            months.forEach((m, idx) => {
+                const val = monthlyPrimes[m], height = (val / maxPrime) * 120, x = idx * 60 + 30, y = 140 - height;
+                svgPrimes += `<rect x="${x}" y="${y}" width="34" height="${height}" fill="#3b82f6" rx="8"/><text x="${x + 17}" y="${y - 6}" font-size="10" text-anchor="middle" font-weight="bold" fill="#0f172a">${val}€</text><text x="${x + 17}" y="160" font-size="10" text-anchor="middle" fill="#64748b">${m.substring(5)}</text>`;
+            });
+            primesContainer.innerHTML = svgPrimes + `</svg>`;
+
+            const maxRecup = Math.max(...Object.values(monthlyRecup), 2);
+            let svgRecup = `<svg width="100%" height="100%" viewBox="0 0 ${months.length * 60 + 40} 180">`;
+            months.forEach((m, idx) => {
+                const val = monthlyRecup[m], height = (val / maxRecup) * 120, x = idx * 60 + 30, y = 140 - height;
+                svgRecup += `<rect x="${x}" y="${y}" width="34" height="${height}" fill="#059669" rx="8"/><text x="${x + 17}" y="${y - 6}" font-size="10" text-anchor="middle" font-weight="bold" fill="#0f172a">${val}j</text><text x="${x + 17}" y="160" font-size="10" text-anchor="middle" fill="#64748b">${m.substring(5)}</text>`;
+            });
+            recupContainer.innerHTML = svgRecup + `</svg>`;
+        }
+
+        function exportDataJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "backup_interventions_v7.json"); dl.click();
+        }
+
+        function exportDataCSV() {
+            let csv = "ID;Type;Libelle;DateDebut;Prime;Recup;PaieEstimee\n";
+            appState.interventions.forEach(i => { csv += `${i.id};${i.type};${i.libelle};${i.dateDebut};${i.prime};${i.recup};${i.moisPaieEstime || ''}\n`; });
+            const dl = document.createElement('a'); dl.setAttribute("href", encodeURI("data:text/csv;charset=utf-8," + csv)); dl.setAttribute("download", "export_interventions_v7.csv"); dl.click();
+        }
+
+        function saveToLocalStorage() { localStorage.setItem('app_suivi_interventions_v7', JSON.stringify(appState)); }
+        function loadFromLocalStorage() {
+            const data = localStorage.getItem('app_suivi_interventions_v7') || localStorage.getItem('app_suivi_interventions_v6') || localStorage.getItem('app_suivi_interventions');
+            if (data) {
+                appState = JSON.parse(data);
+                if (appState.fontSize) {
+                    document.body.className = appState.fontSize;
+                }
+            }
+        }
+
+        window.onload = function() { loadFromLocalStorage(); updateKPIs(); };
+    </script>
+</body>
+</html>
