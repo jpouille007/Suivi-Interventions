@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suivi Personnel des Interventions - V8.3</title>
+    <title>Suivi Personnel des Interventions - V8.4</title>
 
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e293b">
@@ -189,7 +189,7 @@
             color: var(--text-muted);
             text-decoration: none;
             cursor: pointer;
-            width: 25%;
+            width: 20%;
             font-weight: 500;
         }
 
@@ -301,6 +301,7 @@
         .badge-pending { background: #fef3c7; color: #b45309; }
         .badge-ok { background: #d1fae5; color: #047857; }
         .badge-alert { background: #fee2e2; color: #b91c1c; }
+        .badge-neutral { background: #e2e8f0; color: #475569; }
 
         .inter-details {
             padding: 20px;
@@ -333,6 +334,25 @@
             margin-bottom: 16px;
             font-weight: 700;
         }
+
+        .cat-body { padding: 18px 20px; }
+        .cat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .cat-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: calc(var(--font-scale) * 0.85);
+        }
+        .cat-line:last-child { border-bottom: none; }
+        .cat-line span:last-child { font-weight: 700; white-space: nowrap; color: var(--primary); }
+        .cat-total { border-left: 5px solid var(--primary); }
     </style>
 </head>
 <body class="font-normal">
@@ -348,10 +368,10 @@
             <div class="kpi-grid">
                 <div class="kpi-card warning" onclick="filterPendingPrimes()">
                     <div class="kpi-label">Primes en attente</div>
-                    <div class="kpi-value" id="kpi-primes-attente">0 €</div>
+                    <div class="kpi-value" id="kpi-primes-attente">0 â‚¬</div>
                 </div>
                 <div class="kpi-card success" onclick="showScreen('list')">
-                    <div class="kpi-label">Récup. En Cours</div>
+                    <div class="kpi-label">RÃ©cup. En Cours</div>
                     <div class="kpi-value" id="kpi-solde-recup">0 j</div>
                 </div>
             </div>
@@ -368,28 +388,37 @@
                 </div>
                 <div class="nav-btn-large" onclick="showScreen('list')">
                     <div class="nav-btn-content">
-                        <div class="nav-btn-icon">📋</div>
+                        <div class="nav-btn-icon">ðŸ“‹</div>
                         <div class="nav-btn-text">
                             <h2>Mes interventions</h2>
-                            <p>Suivi, validation & paie estimée</p>
+                            <p>Suivi, validation & paie estimÃ©e</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-btn-large" onclick="showScreen('recap')">
+                    <div class="nav-btn-content">
+                        <div class="nav-btn-icon">ðŸ§¾</div>
+                        <div class="nav-btn-text">
+                            <h2>Rapprochement paie</h2>
+                            <p>Totaux par catÃ©gorie de la fiche de paie</p>
                         </div>
                     </div>
                 </div>
                 <div class="nav-btn-large" onclick="showScreen('charts')">
                     <div class="nav-btn-content">
-                        <div class="nav-btn-icon">📊</div>
+                        <div class="nav-btn-icon">ðŸ“Š</div>
                         <div class="nav-btn-text">
                             <h2>Graphiques</h2>
-                            <p>Évolution des primes et récupérations</p>
+                            <p>Ã‰volution des primes et rÃ©cupÃ©rations</p>
                         </div>
                     </div>
                 </div>
                 <div class="nav-btn-large" onclick="showScreen('settings')">
                     <div class="nav-btn-content">
-                        <div class="nav-btn-icon">⚙️</div>
+                        <div class="nav-btn-icon">âš™ï¸</div>
                         <div class="nav-btn-text">
-                            <h2>Paramètres & Règles</h2>
-                            <p>Affichage, forfaits, CSV Pléiades</p>
+                            <h2>ParamÃ¨tres & RÃ¨gles</h2>
+                            <p>Affichage, forfaits, CSV PlÃ©iades</p>
                         </div>
                     </div>
                 </div>
@@ -405,20 +434,20 @@
                     <label for="type-inter">Type d'intervention</label>
                     <select id="type-inter" onchange="onTypeChange()" required>
                         <option value="EMO">EMO (07h00 - 08h00)</option>
-                        <option value="ASTREINTE_SEMAINE">Astreinte semaine complète</option>
-                        <option value="SITE_REMOTE" selected>Intervention Site / À distance</option>
-                        <option value="MAD_JOUR">Mise à disposition / Astreinte Jour</option>
+                        <option value="ASTREINTE_SEMAINE">Astreinte semaine complÃ¨te</option>
+                        <option value="SITE_REMOTE" selected>Intervention Site / Ã€ distance</option>
+                        <option value="MAD_JOUR">Mise Ã  disposition / Astreinte Jour</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="libelle">Libellé / Description</label>
+                    <label for="libelle">LibellÃ© / Description</label>
                     <input type="text" id="libelle" placeholder="Ex: Incident prod Ekara" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="date-debut">Date début</label>
+                        <label for="date-debut">Date dÃ©but</label>
                         <input type="date" id="date-debut" onchange="onDateOrTimeChange()" required>
                     </div>
                     <div class="form-group" id="grp-date-fin">
@@ -429,7 +458,7 @@
 
                 <div class="form-row" id="grp-heures">
                     <div class="form-group">
-                        <label for="heure-debut">Heure début</label>
+                        <label for="heure-debut">Heure dÃ©but</label>
                         <input type="time" id="heure-debut" onchange="onDateOrTimeChange()">
                     </div>
                     <div class="form-group">
@@ -443,18 +472,23 @@
                     <input type="date" id="date-validation-mgr" onchange="onDateOrTimeChange()">
                 </div>
 
+                <div class="form-group">
+                    <label for="mois-paie-reel">Mois de paie rÃ©el (optionnel, prioritaire sur l'estimation)</label>
+                    <input type="month" id="mois-paie-reel">
+                </div>
+
                 <div class="recap-box">
                     <div class="highlight-amounts">
                         <div>
-                            <div class="kpi-label">Prime Estimée</div>
-                            <div class="val-prime" id="calc-prime">0 €</div>
+                            <div class="kpi-label">Prime EstimÃ©e</div>
+                            <div class="val-prime" id="calc-prime">0 â‚¬</div>
                         </div>
                         <div>
-                            <div class="kpi-label">Récupération</div>
+                            <div class="kpi-label">RÃ©cupÃ©ration</div>
                             <div class="val-recup" id="calc-recup">0 j</div>
                         </div>
                     </div>
-                    <div class="rules-list" id="calc-rules">Ajustez les paramètres pour calculer.</div>
+                    <div class="rules-list" id="calc-rules">Ajustez les paramÃ¨tres pour calculer.</div>
                 </div>
 
                 <button type="submit" class="btn">Enregistrer l'intervention</button>
@@ -465,46 +499,54 @@
         <!-- SUIVI DES INTERVENTIONS -->
         <div id="screen-list" class="screen">
             <div class="form-row" style="margin-bottom: 12px;">
-                <input type="text" id="search-filter" placeholder="Rechercher (ex: EMO, Incident...)" oninput="renderList()">
+                <input type="text" id="search-filter" placeholder="Rechercher (ex: EMO, 10/2026...)" oninput="renderList()">
                 <select id="status-filter" onchange="renderList()">
-                    <option value="NON_PAYEE" selected>1. Actives (Non payées/clôturées)</option>
-                    <option value="A_DECLARER">2. A déclarer dans Pléiade</option>
+                    <option value="NON_PAYEE" selected>1. Actives (Non payÃ©es/clÃ´turÃ©es)</option>
+                    <option value="A_DECLARER">2. A dÃ©clarer dans PlÃ©iade</option>
                     <option value="EN_ATTENTE_MANAGER">3. En attente de validation Manager</option>
-                    <option value="A_VERIFIER_PAIE">4. A vérifier dans la Paie</option>
-                    <option value="PAYEE">5. Payée / Clôturée</option>
+                    <option value="A_VERIFIER_PAIE">4. A vÃ©rifier dans la Paie</option>
+                    <option value="PAYEE">5. PayÃ©e / ClÃ´turÃ©e</option>
                     <option value="TOUS">6. Toutes les interventions</option>
                 </select>
             </div>
 
-            <div class="counter-badge" id="counter-badge">0 intervention affichée</div>
+            <div class="counter-badge" id="counter-badge">0 intervention affichÃ©e</div>
             <div id="interventions-container"></div>
+        </div>
+
+        <!-- RAPPROCHEMENT PAIE -->
+        <div id="screen-recap" class="screen">
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label for="recap-month">Mois de paie</label>
+                <select id="recap-month" onchange="onRecapMonthChange()"></select>
+            </div>
+            <div class="counter-badge" id="recap-counter"></div>
+            <div id="recap-container"></div>
         </div>
 
         <!-- GRAPHIQUES -->
         <div id="screen-charts" class="screen">
             <div class="form-group" style="margin-bottom: 16px;">
-                <label for="chart-year-filter">Période du graphique (basée sur le mois de paie estimé)</label>
+                <label for="chart-year-filter">PÃ©riode du graphique (basÃ©e sur le mois de paie)</label>
                 <select id="chart-year-filter" onchange="renderCharts()">
                     <option value="LAST_12" selected>12 derniers mois glissants</option>
-                    <option value="2026">Année 2026</option>
-                    <option value="2025">Année 2025</option>
                 </select>
             </div>
 
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 10px;">Évolution Mensuelle des Primes (€) (Cliquez sur une barre)</div>
+                <div class="kpi-label" style="margin-bottom: 10px;">Ã‰volution Mensuelle des Primes (â‚¬) (Cliquez sur une barre)</div>
                 <div class="chart-container" id="chart-primes-container"></div>
             </div>
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 10px;">Récupérations Acquises par Mois (Jours)</div>
+                <div class="kpi-label" style="margin-bottom: 10px;">RÃ©cupÃ©rations Acquises par Mois (Jours)</div>
                 <div class="chart-container" id="chart-recup-container"></div>
             </div>
         </div>
 
-        <!-- PARAMÈTRES -->
+        <!-- PARAMÃˆTRES -->
         <div id="screen-settings" class="screen">
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 12px;">Préférence d'Affichage (Taille de police)</div>
+                <div class="kpi-label" style="margin-bottom: 12px;">PrÃ©fÃ©rence d'Affichage (Taille de police)</div>
                 <div class="form-group">
                     <select id="font-size-selector" onchange="changeFontSize(this.value)">
                         <option value="font-small">Compacte</option>
@@ -515,27 +557,27 @@
             </div>
 
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 12px;">Moteur de Règles & Forfaits</div>
+                <div class="kpi-label" style="margin-bottom: 12px;">Moteur de RÃ¨gles & Forfaits</div>
                 <div class="form-row">
-                    <div class="form-group"><label>Prime EMO (€)</label><input type="number" id="cfg-emo" onchange="saveSettingsFromUI()"></div>
-                    <div class="form-group"><label>Astreinte Semaine (€)</label><input type="number" id="cfg-astreinte" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>Prime EMO (â‚¬)</label><input type="number" id="cfg-emo" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>Astreinte Semaine (â‚¬)</label><input type="number" id="cfg-astreinte" onchange="saveSettingsFromUI()"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>MAD Semaine (€)</label><input type="number" id="cfg-mad-sem" onchange="saveSettingsFromUI()"></div>
-                    <div class="form-group"><label>MAD WE / Férié (€)</label><input type="number" id="cfg-mad-we" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>MAD Semaine (â‚¬)</label><input type="number" id="cfg-mad-sem" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>MAD WE / FÃ©riÃ© (â‚¬)</label><input type="number" id="cfg-mad-we" onchange="saveSettingsFromUI()"></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group"><label>Majoration Nuit (€)</label><input type="number" id="cfg-nuit" onchange="saveSettingsFromUI()"></div>
-                    <div class="form-group"><label>Semaine Court / Long (€)</label><input type="text" id="cfg-sem-forfaits" disabled style="background:#f1f5f9;"></div>
+                    <div class="form-group"><label>Majoration Nuit (â‚¬)</label><input type="number" id="cfg-nuit" onchange="saveSettingsFromUI()"></div>
+                    <div class="form-group"><label>Semaine Court / Long (â‚¬)</label><input type="text" id="cfg-sem-forfaits" disabled style="background:#f1f5f9;"></div>
                 </div>
             </div>
 
             <div class="chart-box">
-                <div class="kpi-label" style="margin-bottom: 12px;">Import / Export Données</div>
+                <div class="kpi-label" style="margin-bottom: 12px;">Import / Export DonnÃ©es</div>
                 <div class="form-group">
-                    <label style="font-size: calc(var(--font-scale) * 0.8);">Import CSV Pléiades</label>
+                    <label style="font-size: calc(var(--font-scale) * 0.8);">Import CSV PlÃ©iades</label>
                     <input type="file" id="file-csv-pleiades" accept=".csv" style="margin-bottom: 8px;">
-                    <button class="btn btn-secondary" onclick="importCSVPléiades()">Charger CSV Pléiades</button>
+                    <button class="btn btn-secondary" onclick="importCSVPleiades()">Charger CSV PlÃ©iades</button>
                 </div>
                 <div class="form-group" style="margin-top: 12px;">
                     <label style="font-size: calc(var(--font-scale) * 0.8);">Restauration JSON</label>
@@ -551,57 +593,104 @@
 
     </div>
 
-    <!-- NAVIGATION INFÉRIEURE -->
+    <!-- NAVIGATION INFÃ‰RIEURE -->
     <div class="bottom-nav">
         <div class="bottom-nav-item active" id="nav-home" onclick="showScreen('home')">
-            <div class="bottom-nav-icon">🏠</div>
+            <div class="bottom-nav-icon">ðŸ </div>
             <div>Accueil</div>
         </div>
         <div class="bottom-nav-item" id="nav-list" onclick="showScreen('list')">
-            <div class="bottom-nav-icon">📋</div>
+            <div class="bottom-nav-icon">ðŸ“‹</div>
             <div>Suivi</div>
         </div>
+        <div class="bottom-nav-item" id="nav-recap" onclick="showScreen('recap')">
+            <div class="bottom-nav-icon">ðŸ§¾</div>
+            <div>Paie</div>
+        </div>
         <div class="bottom-nav-item" id="nav-charts" onclick="showScreen('charts')">
-            <div class="bottom-nav-icon">📊</div>
+            <div class="bottom-nav-icon">ðŸ“Š</div>
             <div>Stats</div>
         </div>
         <div class="bottom-nav-item" id="nav-settings" onclick="showScreen('settings')">
-            <div class="bottom-nav-icon">⚙️</div>
+            <div class="bottom-nav-icon">âš™ï¸</div>
             <div>Config</div>
         </div>
     </div>
 
     <script>
-        let appState = {
-            fontSize: 'font-normal',
-            interventions: [],
-            settings: {
-                emoPrime: 35,
-                astreinteSemainePrime: 350,
-                madSemaine: 35,
-                madWeekEnd: 80,
-                majorNuit: 40,
-                forfaits: {
-                    semaine: { court: 120, long: 240, recupCourt: 0, recupLong: 0 },
-                    samedi: { court: 125, long: 250, recupCourt: 0.5, recupLong: 1.0 },
-                    dimanche: { court: 210, long: 420, recupCourt: 0.5, recupLong: 1.0 }
-                }
-            }
-        };
+        const STORAGE_KEY = 'app_suivi_interventions_v8.4';
 
+        function defaultState() {
+            return {
+                fontSize: 'font-normal',
+                interventions: [],
+                paieReelle: {},
+                settings: {
+                    emoPrime: 35,
+                    astreinteSemainePrime: 350,
+                    madSemaine: 35,
+                    madWeekEnd: 80,
+                    majorNuit: 40,
+                    forfaits: {
+                        semaine: { court: 120, long: 240, recupCourt: 0, recupLong: 0 },
+                        samedi: { court: 125, long: 250, recupCourt: 0.5, recupLong: 1.0 },
+                        dimanche: { court: 210, long: 420, recupCourt: 0.5, recupLong: 1.0 }
+                    }
+                }
+            };
+        }
+
+        let appState = defaultState();
         let userManualDateFin = false;
+        let recapSelectedMonth = '';
+        let recapOpen = {};
 
         const TYPE_LABELS = {
             'EMO': 'EMO',
-            'ASTREINTE_SEMAINE': 'Astreinte semaine complète',
+            'ASTREINTE_SEMAINE': 'Astreinte semaine complÃ¨te',
             'SITE_REMOTE': 'Intervention Site / A distance',
-            'MAD_JOUR': 'Mise à disposition / Astreinte Jour'
+            'MAD_JOUR': 'Mise Ã  disposition / Astreinte Jour'
         };
+
+        const PAY_CATEGORIES = [
+            { key: 'INDEMNITE_ASTREINTE', label: 'INDEMNITE ASTREINTE' },
+            { key: 'PRESTATION_SEMAINE', label: 'PRESTATION SEMAINE' },
+            { key: 'PRIME_WEEKEND', label: 'PRIME WEEK-END' },
+            { key: 'PRESENCE_MATINALE', label: 'PRESENCE MATINALE' }
+        ];
+
+        /* ---------- Utilitaires de dates (heure locale, jamais UTC) ---------- */
+
+        function pad2(n) { return String(n).padStart(2, '0'); }
+
+        function fmtDate(d) {
+            return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+        }
+
+        function parseLocalDate(str) {
+            const p = String(str).split('-');
+            return new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
+        }
+
+        function todayStr() { return fmtDate(new Date()); }
+
+        function escapeHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function fmtEur(n) {
+            const v = Math.round((n || 0) * 100) / 100;
+            return String(v).replace('.', ',') + ' â‚¬';
+        }
+
+        /* ---------- Jours fÃ©riÃ©s et jours ouvrÃ©s ---------- */
 
         function getFrenchHolidays(year) {
             const holidays = [
-                `${year}-01-01`, `${year}-05-01`, `${year}-05-08`, 
-                `${year}-07-14`, `${year}-08-15`, `${year}-11-01`, 
+                `${year}-01-01`, `${year}-05-01`, `${year}-05-08`,
+                `${year}-07-14`, `${year}-08-15`, `${year}-11-01`,
                 `${year}-11-11`, `${year}-12-25`
             ];
             const a = year % 19, b = Math.floor(year / 100), c = year % 100;
@@ -612,46 +701,95 @@
             const month = Math.floor((h + l - 7 * m + 114) / 31);
             const day = ((h + l - 7 * m + 114) % 31) + 1;
             const paques = new Date(year, month - 1, day);
-            const paquesLundi = new Date(paques); paquesLundi.setDate(paques.getDate() + 1);
-            const ascension = new Date(paques); ascension.setDate(paques.getDate() + 39);
-            const pentecote = new Date(paques); pentecote.setDate(paques.getDate() + 50);
-            const formatDate = d => d.toISOString().split('T')[0];
-            holidays.push(formatDate(paquesLundi), formatDate(ascension), formatDate(pentecote));
+            const plus = n => { const x = new Date(paques); x.setDate(paques.getDate() + n); return fmtDate(x); };
+            holidays.push(plus(1), plus(39), plus(50));
             return holidays;
         }
 
         function isFrenchHoliday(dateStr) {
             if (!dateStr) return false;
-            return getFrenchHolidays(parseInt(dateStr.split('-')[0])).includes(dateStr);
+            return getFrenchHolidays(parseInt(dateStr.split('-')[0], 10)).includes(dateStr);
+        }
+
+        function isWeekendDay(dateStr) {
+            if (!dateStr) return false;
+            const w = parseLocalDate(dateStr).getDay();
+            return w === 0 || w === 6 || isFrenchHoliday(dateStr);
         }
 
         function get10thWorkingDayOfMonth(dateStr) {
             if (!dateStr) return '';
-            const d = new Date(dateStr);
+            const d = parseLocalDate(dateStr);
             const year = d.getFullYear(), month = d.getMonth();
             const holidays = getFrenchHolidays(year);
             let workingDaysCount = 0, current = new Date(year, month, 1);
             while (workingDaysCount < 10) {
                 const dayOfWeek = current.getDay();
-                const curStr = current.toISOString().split('T')[0];
+                const curStr = fmtDate(current);
                 if (dayOfWeek !== 0 && dayOfWeek !== 6 && !holidays.includes(curStr)) workingDaysCount++;
                 if (workingDaysCount === 10) break;
                 current.setDate(current.getDate() + 1);
             }
-            return current.toISOString().split('T')[0];
+            return fmtDate(current);
         }
+
+        /* ---------- Mois de paie ---------- */
 
         function getEstimatedPayMonth(dateDebutStr, validationDateStr) {
             const refDateStr = validationDateStr || dateDebutStr;
-            if (!refDateStr) return 'Période à confirmer';
-            const startDate = new Date(refDateStr);
+            if (!refDateStr) return 'PÃ©riode Ã  confirmer';
+            const startDate = parseLocalDate(refDateStr);
             const m = startDate.getMonth(), y = startDate.getFullYear();
             const limit10thDay = get10thWorkingDayOfMonth(refDateStr);
-            const valDate = validationDateStr || new Date().toISOString().split('T')[0];
+            const valDate = validationDateStr || todayStr();
             let targetDate = new Date(y, m, 1);
             if (valDate > limit10thDay) targetDate.setMonth(targetDate.getMonth() + 1);
-            return `${String(targetDate.getMonth() + 1).padStart(2, '0')}/${targetDate.getFullYear()}`;
+            return `${pad2(targetDate.getMonth() + 1)}/${targetDate.getFullYear()}`;
         }
+
+        // Le mois rÃ©el (figÃ© au paiement ou saisi) est prioritaire sur l'estimation.
+        function getPayMonth(item) {
+            if (item.moisPaieReel) return item.moisPaieReel;
+            return getEstimatedPayMonth(item.dateDebut, item.validation ? item.validation.date : null);
+        }
+
+        function isValidPayMonth(s) { return /^\d{2}\/\d{4}$/.test(s || ''); }
+
+        function payMonthToKey(s) { const p = s.split('/'); return `${p[1]}-${p[0]}`; }
+
+        /* ---------- CatÃ©gories de la fiche de paie ---------- */
+
+        function normLabel(s) {
+            return String(s == null ? '' : s).normalize('NFD').replace(/[Ì€-Í¯]/g, '').toUpperCase().replace(/\s+/g, ' ').trim();
+        }
+
+        // Les donnÃ©es importÃ©es (CSV PlÃ©iades, anciennes versions) ont souvent le type
+        // SITE_REMOTE pour tout : on retrouve EMO et Astreinte semaine par le libellÃ©.
+        function inferTypeFromLabel(libelle, prime) {
+            const l = normLabel(libelle);
+            if (/^EMO\b/.test(l) || /EARLY MORNING/.test(l)) return 'EMO';
+            if (/^ASTREINTE( SEMAINE( COMPLETE)?)?$/.test(l)) return 'ASTREINTE_SEMAINE';
+            if (/ASTREINTE/.test(l) && prime === appState.settings.astreinteSemainePrime) return 'ASTREINTE_SEMAINE';
+            return 'SITE_REMOTE';
+        }
+
+        function getEffectiveType(item) {
+            if (item.type === 'SITE_REMOTE') return inferTypeFromLabel(item.libelle, item.prime);
+            return item.type;
+        }
+
+        function getPayCategory(item) {
+            const type = getEffectiveType(item);
+            if (type === 'ASTREINTE_SEMAINE') return 'INDEMNITE_ASTREINTE';
+            if (type === 'EMO') return 'PRESENCE_MATINALE';
+            if (type === 'MAD_JOUR') {
+                return isWeekendDay(item.dateDebut) ? 'PRIME_WEEKEND' : 'PRESTATION_SEMAINE';
+            }
+            const fin = item.dateFin || item.dateDebut;
+            return (isWeekendDay(item.dateDebut) || isWeekendDay(fin)) ? 'PRIME_WEEKEND' : 'PRESTATION_SEMAINE';
+        }
+
+        /* ---------- Moteur de rÃ¨gles ---------- */
 
         function calculateRules(data) {
             const type = data.type;
@@ -660,9 +798,9 @@
             if (type === 'EMO') return { prime: appState.settings.emoPrime, recup: 0, durationHours: 1.0, rules: ["Forfait EMO (07h00 - 08h00)"] };
             if (type === 'ASTREINTE_SEMAINE') return { prime: appState.settings.astreinteSemainePrime, recup: 0, durationHours: 168.0, rules: ["Forfait Astreinte Semaine"] };
             if (type === 'MAD_JOUR') {
-                const day = new Date(data.dateDebut).getDay(), isHoliday = isFrenchHoliday(data.dateDebut);
+                const day = parseLocalDate(data.dateDebut).getDay(), isHoliday = isFrenchHoliday(data.dateDebut);
                 prime = (day === 0 || day === 6 || isHoliday) ? appState.settings.madWeekEnd : appState.settings.madSemaine;
-                return { prime, recup: 0, durationHours: 24.0, rules: [`Mise à disposition (${prime} €)`] };
+                return { prime, recup: 0, durationHours: 24.0, rules: [`Mise Ã  disposition (${prime} â‚¬)`] };
             }
 
             const dtStart = new Date(`${data.dateDebut}T${data.heureDebut || '00:00'}:00`);
@@ -670,24 +808,24 @@
             const durationHours = Math.max(0, (dtEnd - dtStart) / (1000 * 60 * 60));
             const isLong = durationHours >= 4.0;
             const startHoliday = isFrenchHoliday(data.dateDebut), endHoliday = isFrenchHoliday(data.dateFin);
-            const startDay = new Date(data.dateDebut).getDay(), endDay = new Date(data.dateFin).getDay();
+            const startDay = parseLocalDate(data.dateDebut).getDay(), endDay = parseLocalDate(data.dateFin).getDay();
             const isSundayOrHoliday = (startDay === 0 || endDay === 0 || startHoliday || endHoliday);
 
             if (isSundayOrHoliday) {
                 const cfg = appState.settings.forfaits.dimanche;
                 prime = isLong ? cfg.long : cfg.court;
                 recup = isLong ? cfg.recupLong : cfg.recupCourt;
-                rules.push(`Forfait Dimanche/Férié (${isLong ? 'Long' : 'Court'}): ${prime} €`);
+                rules.push(`Forfait Dimanche/FÃ©riÃ© (${isLong ? 'Long' : 'Court'}): ${prime} â‚¬`);
             } else if (endDay === 6 || startDay === 6) {
                 const cfg = appState.settings.forfaits.samedi;
                 prime = isLong ? cfg.long : cfg.court;
                 recup = isLong ? cfg.recupLong : cfg.recupCourt;
-                rules.push(`Forfait Samedi (${isLong ? 'Long' : 'Court'}): ${prime} €`);
+                rules.push(`Forfait Samedi (${isLong ? 'Long' : 'Court'}): ${prime} â‚¬`);
             } else {
                 const cfg = appState.settings.forfaits.semaine;
                 prime = isLong ? cfg.long : cfg.court;
                 recup = 0;
-                rules.push(`Forfait Semaine (${isLong ? 'Long' : 'Court'}): ${prime} €`);
+                rules.push(`Forfait Semaine (${isLong ? 'Long' : 'Court'}): ${prime} â‚¬`);
             }
 
             if (!isSundayOrHoliday) {
@@ -699,12 +837,14 @@
                 }
                 if (hasNightOverlap) {
                     prime += appState.settings.majorNuit;
-                    rules.push(`Majoration nuit (+${appState.settings.majorNuit} €)`);
+                    rules.push(`Majoration nuit (+${appState.settings.majorNuit} â‚¬)`);
                 }
             }
 
             return { prime, recup, durationHours, rules };
         }
+
+        /* ---------- Navigation ---------- */
 
         function showScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -714,9 +854,14 @@
             if (navItem) navItem.classList.add('active');
 
             if (screenId === 'home') updateKPIs();
-            if (screenId === 'list') renderList();
+            if (screenId === 'list') {
+                document.getElementById('search-filter').value = '';
+                renderList();
+            }
+            if (screenId === 'recap') renderRecap();
             if (screenId === 'charts') renderCharts();
             if (screenId === 'settings') loadSettingsToUI();
+            window.scrollTo(0, 0);
         }
 
         function filterPendingPrimes() {
@@ -729,12 +874,13 @@
             document.getElementById('inter-form').reset();
             document.getElementById('edit-id').value = '';
             document.getElementById('btn-delete').style.display = 'none';
-            const today = new Date().toISOString().split('T')[0];
+            const today = todayStr();
             document.getElementById('date-debut').value = today;
             document.getElementById('date-fin').value = today;
             document.getElementById('heure-debut').value = "21:00";
             document.getElementById('heure-fin').value = "01:00";
             document.getElementById('date-validation-mgr').value = '';
+            document.getElementById('mois-paie-reel').value = '';
             userManualDateFin = false;
             onTypeChange();
             showScreen('form');
@@ -757,8 +903,8 @@
 
             if (type === 'SITE_REMOTE' && !userManualDateFin && dateDebut && heureDebut && heureFin) {
                 if (heureFin < heureDebut) {
-                    const d = new Date(dateDebut); d.setDate(d.getDate() + 1);
-                    dateFin = d.toISOString().split('T')[0];
+                    const d = parseLocalDate(dateDebut); d.setDate(d.getDate() + 1);
+                    dateFin = fmtDate(d);
                     document.getElementById('date-fin').value = dateFin;
                 } else {
                     document.getElementById('date-fin').value = dateDebut;
@@ -766,10 +912,23 @@
                 }
             }
 
-            const calc = calculateRules({ type, dateDebut, dateFin, heureDebut, heureFin });
-            document.getElementById('calc-prime').innerText = `${calc.prime} €`;
+            if (!dateDebut) return;
+            const calc = calculateRules({ type, dateDebut, dateFin: dateFin || dateDebut, heureDebut, heureFin });
+            document.getElementById('calc-prime').innerText = `${calc.prime} â‚¬`;
             document.getElementById('calc-recup').innerText = `${calc.recup} j`;
-            document.getElementById('calc-rules').innerHTML = calc.rules.map(r => `• ${r}`).join('<br>');
+            document.getElementById('calc-rules').innerHTML = calc.rules.map(r => `â€¢ ${escapeHtml(r)}`).join('<br>');
+        }
+
+        /* ---------- Saisie ---------- */
+
+        function monthInputToPayMonth(v) {
+            if (!v) return '';
+            const p = v.split('-');
+            return `${p[1]}/${p[0]}`;
+        }
+
+        function payMonthToMonthInput(s) {
+            return isValidPayMonth(s) ? payMonthToKey(s) : '';
         }
 
         function saveIntervention(e) {
@@ -779,23 +938,28 @@
             const dateDebut = document.getElementById('date-debut').value;
             let dateFin = document.getElementById('date-fin').value, heureDebut = document.getElementById('heure-debut').value, heureFin = document.getElementById('heure-fin').value;
             const valDate = document.getElementById('date-validation-mgr').value;
+            const reelInput = monthInputToPayMonth(document.getElementById('mois-paie-reel').value);
 
             if (type === 'EMO') { dateFin = dateDebut; heureDebut = "07:00"; heureFin = "08:00"; }
+            if (type === 'MAD_JOUR') { dateFin = dateDebut; }
             const calc = calculateRules({ type, dateDebut, dateFin, heureDebut, heureFin });
             const estimatedPay = getEstimatedPayMonth(dateDebut, valDate);
 
             if (editId) {
                 const idx = appState.interventions.findIndex(i => i.id === editId);
                 if (idx !== -1) {
+                    const old = appState.interventions[idx];
+                    const isPaid = old.paie && old.paie.status === 'PAYEE';
                     appState.interventions[idx] = {
-                        ...appState.interventions[idx],
+                        ...old,
                         type, libelle, dateDebut, dateFin, heureDebut, heureFin,
                         prime: calc.prime, recup: calc.recup, durationHours: calc.durationHours, rules: calc.rules,
                         validation: {
-                            status: valDate ? 'VALIDEE' : appState.interventions[idx].validation.status,
+                            status: valDate ? 'VALIDEE' : old.validation.status,
                             date: valDate
                         },
-                        moisPaieEstime: estimatedPay
+                        moisPaieEstime: estimatedPay,
+                        moisPaieReel: reelInput || (isPaid ? estimatedPay : '')
                     };
                 }
             } else {
@@ -805,7 +969,8 @@
                     declaration: { status: 'A_DECLARER', date: null },
                     validation: { status: valDate ? 'VALIDEE' : 'EN_ATTENTE', date: valDate },
                     paie: { status: 'A_VERIFIER', date: null },
-                    moisPaieEstime: estimatedPay
+                    moisPaieEstime: estimatedPay,
+                    moisPaieReel: reelInput
                 });
             }
 
@@ -816,7 +981,7 @@
         function confirmDeleteIntervention() {
             const editId = document.getElementById('edit-id').value;
             if (!editId) return;
-            if (confirm("Êtes-vous sûr de vouloir supprimer cette intervention ?")) {
+            if (confirm("ÃŠtes-vous sÃ»r de vouloir supprimer cette intervention ?")) {
                 appState.interventions = appState.interventions.filter(i => i.id !== editId);
                 saveToLocalStorage();
                 showScreen('list');
@@ -827,19 +992,22 @@
             const item = appState.interventions.find(i => i.id === id);
             if (!item) return;
             document.getElementById('edit-id').value = item.id;
-            document.getElementById('type-inter').value = item.type;
+            document.getElementById('type-inter').value = getEffectiveType(item);
             document.getElementById('libelle').value = item.libelle;
             document.getElementById('date-debut').value = item.dateDebut || '';
             document.getElementById('date-fin').value = item.dateFin || '';
             document.getElementById('heure-debut').value = item.heureDebut || '';
             document.getElementById('heure-fin').value = item.heureFin || '';
             document.getElementById('date-validation-mgr').value = (item.validation && item.validation.date) ? item.validation.date : '';
+            document.getElementById('mois-paie-reel').value = payMonthToMonthInput(item.moisPaieReel);
             document.getElementById('btn-delete').style.display = 'block';
             userManualDateFin = true;
             onTypeChange();
             onDateOrTimeChange();
             showScreen('form');
         }
+
+        /* ---------- Liste ---------- */
 
         function renderList() {
             const container = document.getElementById('interventions-container');
@@ -849,13 +1017,11 @@
 
             const filtered = appState.interventions.filter(item => {
                 const typeLabel = (TYPE_LABELS[item.type] || item.type).toLowerCase();
-                item.moisPaieEstime = getEstimatedPayMonth(item.dateDebut, item.validation ? item.validation.date : null);
-                
-                const moisPaie = (item.moisPaieEstime || "").toLowerCase();
-                const matchesSearch = !search || 
-                    item.libelle.toLowerCase().includes(search) || 
-                    item.type.toLowerCase().includes(search) || 
-                    typeLabel.includes(search) || 
+                const moisPaie = getPayMonth(item).toLowerCase();
+                const matchesSearch = !search ||
+                    (item.libelle || '').toLowerCase().includes(search) ||
+                    item.type.toLowerCase().includes(search) ||
+                    typeLabel.includes(search) ||
                     (item.dateDebut && item.dateDebut.includes(search)) ||
                     moisPaie.includes(search);
 
@@ -869,16 +1035,18 @@
                 return true;
             });
 
-            filtered.sort((a,b) => new Date(b.dateDebut) - new Date(a.dateDebut));
-            document.getElementById('counter-badge').innerText = `${filtered.length} intervention${filtered.length > 1 ? 's' : ''} affichée${filtered.length > 1 ? 's' : ''}`;
+            filtered.sort((a, b) => parseLocalDate(b.dateDebut) - parseLocalDate(a.dateDebut));
+            document.getElementById('counter-badge').innerText = `${filtered.length} intervention${filtered.length > 1 ? 's' : ''} affichÃ©e${filtered.length > 1 ? 's' : ''}`;
 
             filtered.forEach(item => {
                 const limitDateManager = get10thWorkingDayOfMonth(item.dateDebut);
-                const isLateManager = item.validation.status === 'EN_ATTENTE' && new Date().toISOString().split('T')[0] > limitDateManager;
-                const moisPaie = item.moisPaieEstime;
-                const valDateText = (item.validation && item.validation.date) ? `Validée le : ${item.validation.date}` : 'Validation manager non renseignée';
+                const isLateManager = item.validation.status === 'EN_ATTENTE' && todayStr() > limitDateManager;
+                const moisPaie = getPayMonth(item);
+                const catKey = getPayCategory(item);
+                const catLabel = PAY_CATEGORIES.find(c => c.key === catKey).label;
+                const valDateText = (item.validation && item.validation.date) ? `ValidÃ©e le : ${item.validation.date}` : 'Validation manager non renseignÃ©e';
 
-                const rulesHtml = (item.rules || []).map(r => `• ${r}`).join('<br>');
+                const rulesHtml = (item.rules || []).map(r => `â€¢ ${escapeHtml(r)}`).join('<br>');
                 const safeTypeLabel = TYPE_LABELS[item.type] || item.type;
 
                 const card = document.createElement('div');
@@ -886,31 +1054,32 @@
                 card.innerHTML = `
                     <div class="inter-header" onclick="this.parentElement.classList.toggle('open')">
                         <div class="inter-header-info">
-                            <h3>${item.libelle}</h3>
-                            <p>${item.dateDebut} • ${safeTypeLabel}</p>
+                            <h3>${escapeHtml(item.libelle)}</h3>
+                            <p>${escapeHtml(item.dateDebut)} â€¢ ${escapeHtml(safeTypeLabel)}</p>
                         </div>
                         <div class="inter-badges">
-                            <div style="font-weight:700; color:var(--primary);">${item.prime} €</div>
+                            <div style="font-weight:700; color:var(--primary);">${item.prime} â‚¬</div>
                             <span class="badge ${item.paie.status === 'PAYEE' ? 'badge-ok' : (isLateManager ? 'badge-alert' : 'badge-pending')}">
-                                ${item.paie.status === 'PAYEE' ? 'Payée' : (item.validation.status === 'VALIDEE' ? 'Validée' : 'En Attente')}
+                                ${item.paie.status === 'PAYEE' ? 'PayÃ©e' : (item.validation.status === 'VALIDEE' ? 'ValidÃ©e' : 'En Attente')}
                             </span>
                         </div>
                     </div>
                     <div class="inter-details">
-                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Heures / Durée :</strong> ${item.heureDebut || '--:--'} - ${item.heureFin || '--:--'} (${item.durationHours || 1}h)</p>
-                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Récupération acquise :</strong> ${item.recup || 0} j</p>
-                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Mois de paie estimé :</strong> <span style="color:var(--primary); font-weight:700;">${moisPaie}</span></p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Heures / DurÃ©e :</strong> ${item.heureDebut || '--:--'} - ${item.heureFin || '--:--'} (${item.durationHours || 1}h)</p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>RÃ©cupÃ©ration acquise :</strong> ${item.recup || 0} j</p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Mois de paie :</strong> <span style="color:var(--primary); font-weight:700;">${moisPaie}</span>${item.moisPaieReel ? ' (rÃ©el)' : ' (estimÃ©)'}</p>
+                        <p style="font-size: calc(var(--font-scale) * 0.85); margin-bottom:6px;"><strong>Ligne de paie :</strong> ${catLabel}</p>
                         <p style="font-size: calc(var(--font-scale) * 0.8); color:var(--text-muted); margin-bottom:6px;">${valDateText}</p>
                         <div style="background:#fff; padding:12px; border-radius:10px; margin-bottom:12px; font-size: calc(var(--font-scale) * 0.8); color:var(--text-muted); border:1px solid #e2e8f0;">
                             ${rulesHtml}
                         </div>
                         <div class="form-row" style="margin-bottom:8px;">
-                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'DECLARER')">${item.declaration.status === 'DECLAREE' ? '✓ Déclarée' : 'Déclarer'}</button>
-                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'VALIDER')">${item.validation.status === 'VALIDEE' ? '✓ Validée' : 'Valider Manager'}</button>
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'DECLARER')">${item.declaration.status === 'DECLAREE' ? 'âœ“ DÃ©clarÃ©e' : 'DÃ©clarer'}</button>
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'VALIDER')">${item.validation.status === 'VALIDEE' ? 'âœ“ ValidÃ©e' : 'Valider Manager'}</button>
                         </div>
                         <div class="form-row">
-                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'PAYEE')">${item.paie.status === 'PAYEE' ? '✓ Payée' : 'Marquer Payée'}</button>
-                            <button class="btn" onclick="editIntervention('${item.id}')">Éditer</button>
+                            <button class="btn btn-secondary" onclick="updateAdminStatus('${item.id}', 'PAYEE')">${item.paie.status === 'PAYEE' ? 'âœ“ PayÃ©e' : 'Marquer PayÃ©e'}</button>
+                            <button class="btn" onclick="editIntervention('${item.id}')">Ã‰diter</button>
                         </div>
                     </div>
                 `;
@@ -921,14 +1090,18 @@
         function updateAdminStatus(id, action) {
             const item = appState.interventions.find(i => i.id === id);
             if (!item) return;
-            const today = new Date().toISOString().split('T')[0];
+            const today = todayStr();
             if (action === 'DECLARER') { item.declaration.status = 'DECLAREE'; item.declaration.date = today; }
-            else if (action === 'VALIDER') { 
-                item.validation.status = 'VALIDEE'; 
-                item.validation.date = today; 
-                item.moisPaieEstime = getEstimatedPayMonth(item.dateDebut, today); 
+            else if (action === 'VALIDER') {
+                item.validation.status = 'VALIDEE';
+                item.validation.date = today;
+                item.moisPaieEstime = getEstimatedPayMonth(item.dateDebut, today);
             }
-            else if (action === 'PAYEE') { item.paie.status = 'PAYEE'; item.paie.date = today; }
+            else if (action === 'PAYEE') {
+                if (!item.moisPaieReel) item.moisPaieReel = getEstimatedPayMonth(item.dateDebut, item.validation ? item.validation.date : null);
+                item.paie.status = 'PAYEE';
+                item.paie.date = today;
+            }
             saveToLocalStorage();
             renderList();
         }
@@ -941,9 +1114,97 @@
                     totalRecupNonPayee += (i.recup || 0);
                 }
             });
-            document.getElementById('kpi-primes-attente').innerText = `${primesAttente} €`;
+            document.getElementById('kpi-primes-attente').innerText = `${primesAttente} â‚¬`;
             document.getElementById('kpi-solde-recup').innerText = `${totalRecupNonPayee} j`;
         }
+
+        /* ---------- Rapprochement paie ---------- */
+
+        function getRecapMonthKeys() {
+            const keys = new Set();
+            appState.interventions.forEach(i => {
+                const pm = getPayMonth(i);
+                if (isValidPayMonth(pm)) keys.add(payMonthToKey(pm));
+            });
+            return [...keys].sort().reverse();
+        }
+
+        function onRecapMonthChange() {
+            recapSelectedMonth = document.getElementById('recap-month').value;
+            renderRecap();
+        }
+
+        function toggleRecapDetail(catKey) {
+            recapOpen[catKey] = !recapOpen[catKey];
+            renderRecap();
+        }
+
+        function renderRecap() {
+            const select = document.getElementById('recap-month');
+            const container = document.getElementById('recap-container');
+            const keys = getRecapMonthKeys();
+
+            if (keys.length === 0) {
+                select.innerHTML = '';
+                document.getElementById('recap-counter').innerText = '';
+                container.innerHTML = '<p style="color:var(--text-muted);">Aucune intervention enregistrÃ©e.</p>';
+                return;
+            }
+
+            if (!keys.includes(recapSelectedMonth)) {
+                const current = todayStr().substring(0, 7);
+                recapSelectedMonth = keys.find(k => k <= current) || keys[0];
+            }
+            select.innerHTML = keys.map(k => {
+                const p = k.split('-');
+                return `<option value="${k}">${p[1]}/${p[0]}</option>`;
+            }).join('');
+            select.value = recapSelectedMonth;
+
+            const monthKey = recapSelectedMonth;
+            const items = appState.interventions.filter(i => {
+                const pm = getPayMonth(i);
+                return isValidPayMonth(pm) && payMonthToKey(pm) === monthKey;
+            }).sort((a, b) => parseLocalDate(a.dateDebut) - parseLocalDate(b.dateDebut));
+
+            document.getElementById('recap-counter').innerText = `${items.length} intervention${items.length > 1 ? 's' : ''} sur ce mois de paie`;
+
+            let totalCalc = 0;
+            let html = '';
+
+            PAY_CATEGORIES.forEach(cat => {
+                const lines = items.filter(i => getPayCategory(i) === cat.key);
+                const calc = lines.reduce((s, i) => s + (i.prime || 0), 0);
+                totalCalc += calc;
+                const canOpen = lines.length > 0;
+                const open = canOpen && !!recapOpen[cat.key];
+                const detailHtml = lines.map(i => `<div class="cat-line"><span>${escapeHtml(i.dateDebut)} â€¢ ${escapeHtml(i.libelle)}</span><span>${fmtEur(i.prime)}</span></div>`).join('');
+
+                html += `
+                <div class="inter-card ${open ? 'open' : ''}">
+                    <div class="inter-header" ${canOpen ? `onclick="toggleRecapDetail('${cat.key}')"` : 'style="cursor:default;"'}>
+                        <div class="inter-header-info">
+                            <h3>${cat.label}</h3>
+                            <p>${lines.length} intervention${lines.length > 1 ? 's' : ''}${canOpen ? (open ? ' Â· â–²' : ' Â· â–¼') : ''}</p>
+                        </div>
+                        <div class="val-prime">${fmtEur(calc)}</div>
+                    </div>
+                    ${canOpen ? `<div class="inter-details">${detailHtml}</div>` : ''}
+                </div>`;
+            });
+
+            html += `
+            <div class="inter-card cat-total">
+                <div class="inter-header" style="cursor:default;">
+                    <div class="inter-header-info"><h3>TOTAL</h3></div>
+                    <div class="val-prime">${fmtEur(totalCalc)}</div>
+                </div>
+            </div>`;
+
+            container.innerHTML = html;
+        }
+
+        /* ---------- ParamÃ¨tres ---------- */
 
         function changeFontSize(sizeClass) {
             appState.fontSize = sizeClass;
@@ -957,23 +1218,31 @@
             document.getElementById('cfg-mad-sem').value = appState.settings.madSemaine;
             document.getElementById('cfg-mad-we').value = appState.settings.madWeekEnd;
             document.getElementById('cfg-nuit').value = appState.settings.majorNuit;
-            document.getElementById('cfg-sem-forfaits').value = `${appState.settings.forfaits.semaine.court}€ / ${appState.settings.forfaits.semaine.long}€`;
+            document.getElementById('cfg-sem-forfaits').value = `${appState.settings.forfaits.semaine.court}â‚¬ / ${appState.settings.forfaits.semaine.long}â‚¬`;
             document.getElementById('font-size-selector').value = appState.fontSize || 'font-normal';
         }
 
+        function numOr(id, def) {
+            const v = parseFloat(document.getElementById(id).value);
+            return isNaN(v) ? def : v;
+        }
+
         function saveSettingsFromUI() {
-            appState.settings.emoPrime = parseFloat(document.getElementById('cfg-emo').value) || 35;
-            appState.settings.astreinteSemainePrime = parseFloat(document.getElementById('cfg-astreinte').value) || 350;
-            appState.settings.madSemaine = parseFloat(document.getElementById('cfg-mad-sem').value) || 35;
-            appState.settings.madWeekEnd = parseFloat(document.getElementById('cfg-mad-we').value) || 80;
-            appState.settings.majorNuit = parseFloat(document.getElementById('cfg-nuit').value) || 40;
+            const s = appState.settings;
+            s.emoPrime = numOr('cfg-emo', s.emoPrime);
+            s.astreinteSemainePrime = numOr('cfg-astreinte', s.astreinteSemainePrime);
+            s.madSemaine = numOr('cfg-mad-sem', s.madSemaine);
+            s.madWeekEnd = numOr('cfg-mad-we', s.madWeekEnd);
+            s.majorNuit = numOr('cfg-nuit', s.majorNuit);
             saveToLocalStorage();
         }
 
-        function importCSVPléiades() {
+        /* ---------- Import / Export ---------- */
+
+        function importCSVPleiades() {
             const fileInput = document.getElementById('file-csv-pleiades');
             const file = fileInput.files[0];
-            if (!file) return alert('Sélectionnez un fichier CSV.');
+            if (!file) return alert('SÃ©lectionnez un fichier CSV.');
             const reader = new FileReader();
             reader.onload = function(e) {
                 const lines = e.target.result.split('\n');
@@ -982,24 +1251,25 @@
                     if (idx === 0 || !line.trim()) return;
                     const cols = line.split(';').map(c => c.replace(/^"|"$/g, '').trim());
                     if (cols.length >= 10) {
-                        const dateRH = cols[4] ? cols[4].split('/').reverse().join('-') : new Date().toISOString().split('T')[0];
+                        const dateRH = cols[4] ? cols[4].split('/').reverse().join('-') : todayStr();
                         const valDateRH = cols[13] ? cols[13].split('/').reverse().join('-') : null;
                         appState.interventions.push({
                             id: 'INT-RH-' + Date.now() + '-' + idx,
-                            type: 'SITE_REMOTE', libelle: cols[2] || 'Intervention RH',
+                            type: inferTypeFromLabel(cols[2], parseFloat((cols[9] || '0').replace(',', '.'))), libelle: cols[2] || 'Intervention RH',
                             dateDebut: dateRH, dateFin: dateRH, heureDebut: cols[6] || "00:00", heureFin: cols[7] || "00:00",
                             prime: parseFloat((cols[9] || '0').replace(',', '.')), recup: parseFloat((cols[10] || '0').replace(',', '.')),
-                            durationHours: 1.0, rules: ["Importé depuis Pléiades RH"],
+                            durationHours: 1.0, rules: ["ImportÃ© depuis PlÃ©iades RH"],
                             declaration: { status: 'DECLAREE', date: dateRH },
                             validation: { status: valDateRH ? 'VALIDEE' : 'EN_ATTENTE', date: valDateRH },
-                            paie: { status: cols[11] === 'Traitée' ? 'PAYEE' : 'A_VERIFIER', date: null },
-                            moisPaieEstime: getEstimatedPayMonth(dateRH, valDateRH)
+                            paie: { status: cols[11] === 'TraitÃ©e' ? 'PAYEE' : 'A_VERIFIER', date: null },
+                            moisPaieEstime: getEstimatedPayMonth(dateRH, valDateRH),
+                            moisPaieReel: cols[11] === 'TraitÃ©e' ? getEstimatedPayMonth(dateRH, valDateRH) : ''
                         });
                         count++;
                     }
                 });
                 saveToLocalStorage();
-                alert(`${count} interventions importées !`);
+                alert(`${count} interventions importÃ©es !`);
                 showScreen('home');
             };
             reader.readAsText(file, 'ISO-8859-1');
@@ -1008,34 +1278,85 @@
         function importDataJSON() {
             const fileInput = document.getElementById('file-json-import');
             const file = fileInput.files[0];
-            if (!file) return alert('Sélectionnez un fichier JSON.');
+            if (!file) return alert('SÃ©lectionnez un fichier JSON.');
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const parsed = JSON.parse(e.target.result);
-                    if (parsed.interventions) { appState = parsed; saveToLocalStorage(); alert('Restauration réussie !'); showScreen('home'); }
+                    if (parsed.interventions) {
+                        appState = mergeState(parsed);
+                        freezePaidMonths();
+                        saveToLocalStorage();
+                        document.body.className = appState.fontSize || 'font-normal';
+                        alert('Restauration rÃ©ussie !');
+                        showScreen('home');
+                    } else {
+                        alert('Fichier JSON invalide.');
+                    }
                 } catch(err) { alert('Fichier JSON invalide.'); }
             };
             reader.readAsText(file);
         }
 
+        function downloadFile(name, mime, content) {
+            const blob = new Blob([content], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const dl = document.createElement('a');
+            dl.href = url; dl.download = name;
+            document.body.appendChild(dl);
+            dl.click();
+            document.body.removeChild(dl);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+
+        function exportDataJSON() {
+            downloadFile('backup_interventions_v8.4.json', 'application/json', JSON.stringify(appState, null, 2));
+        }
+
+        function exportDataCSV() {
+            let csv = "ID;Type;Libelle;DateDebut;DateFin;Prime;Recup;MoisPaie;LignePaie\n";
+            appState.interventions.forEach(i => {
+                const cat = PAY_CATEGORIES.find(c => c.key === getPayCategory(i)).label;
+                const lib = String(i.libelle || '').replace(/;/g, ',').replace(/[\r\n]+/g, ' ');
+                csv += `${i.id};${i.type};${lib};${i.dateDebut};${i.dateFin || ''};${i.prime};${i.recup};${getPayMonth(i)};${cat}\n`;
+            });
+            downloadFile('export_interventions_v8.4.csv', 'text/csv;charset=utf-8', '\ufeff' + csv);
+        }
+
+        /* ---------- Graphiques ---------- */
+
+        function populateChartYears() {
+            const sel = document.getElementById('chart-year-filter');
+            const cur = sel.value || 'LAST_12';
+            const years = new Set([String(new Date().getFullYear())]);
+            appState.interventions.forEach(i => {
+                const pm = getPayMonth(i);
+                if (isValidPayMonth(pm)) years.add(pm.split('/')[1]);
+            });
+            let html = '<option value="LAST_12">12 derniers mois glissants</option>';
+            [...years].sort().reverse().forEach(y => { html += `<option value="${y}">AnnÃ©e ${y}</option>`; });
+            html += '<option value="TOUS">Toutes les pÃ©riodes</option>';
+            sel.innerHTML = html;
+            sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'LAST_12';
+        }
+
         function renderCharts() {
+            populateChartYears();
             const primesContainer = document.getElementById('chart-primes-container');
             const recupContainer = document.getElementById('chart-recup-container');
             const filterPeriod = document.getElementById('chart-year-filter').value;
             const monthlyPrimes = {}, monthlyRecup = {};
 
             appState.interventions.forEach(i => {
-                const moisPaie = getEstimatedPayMonth(i.dateDebut, i.validation ? i.validation.date : null);
+                const moisPaie = getPayMonth(i);
+                if (!isValidPayMonth(moisPaie)) return;
                 const parts = moisPaie.split('/');
-                if (parts.length !== 2) return;
-                
                 const monthKey = `${parts[1]}-${parts[0]}`;
                 const year = parts[1];
 
                 if (filterPeriod === 'LAST_12') {
                     const d = new Date(); d.setMonth(d.getMonth() - 12);
-                    if (monthKey < d.toISOString().substring(0, 7)) return;
+                    if (monthKey < fmtDate(d).substring(0, 7)) return;
                 } else if (filterPeriod !== 'TOUS' && year !== filterPeriod) return;
 
                 monthlyPrimes[monthKey] = (monthlyPrimes[monthKey] || 0) + (i.prime || 0);
@@ -1044,7 +1365,7 @@
 
             const months = Object.keys(monthlyPrimes).sort();
             if (months.length === 0) {
-                primesContainer.innerHTML = recupContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Aucune donnée.</p>';
+                primesContainer.innerHTML = recupContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">Aucune donnÃ©e.</p>';
                 return;
             }
 
@@ -1052,7 +1373,7 @@
             let svgPrimes = `<svg width="100%" height="100%" viewBox="0 0 ${months.length * 60 + 40} 180">`;
             months.forEach((m, idx) => {
                 const val = monthlyPrimes[m], height = (val / maxPrime) * 120, x = idx * 60 + 30, y = 140 - height;
-                svgPrimes += `<rect x="${x}" y="${y}" width="34" height="${height}" fill="#3b82f6" rx="8" style="cursor:pointer;" onclick="filterByMonth('${m}')"/><text x="${x + 17}" y="${y - 6}" font-size="10" text-anchor="middle" font-weight="bold" fill="#0f172a">${val}€</text><text x="${x + 17}" y="160" font-size="10" text-anchor="middle" fill="#64748b">${m.substring(5)}</text>`;
+                svgPrimes += `<rect x="${x}" y="${y}" width="34" height="${height}" fill="#3b82f6" rx="8" style="cursor:pointer;" onclick="filterByMonth('${m}')"/><text x="${x + 17}" y="${y - 6}" font-size="10" text-anchor="middle" font-weight="bold" fill="#0f172a">${val}â‚¬</text><text x="${x + 17}" y="160" font-size="10" text-anchor="middle" fill="#64748b">${m.substring(5)}</text>`;
             });
             primesContainer.innerHTML = svgPrimes + `</svg>`;
 
@@ -1069,44 +1390,69 @@
             showScreen('list');
             document.getElementById('status-filter').value = 'TOUS';
             const parts = monthKey.split('-');
-            const formattedQuery = `${parts[1]}/${parts[0]}`;
-            document.getElementById('search-filter').value = formattedQuery;
+            document.getElementById('search-filter').value = `${parts[1]}/${parts[0]}`;
             renderList();
         }
 
-        function exportDataJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
-            const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "backup_interventions_v8.3.json"); dl.click();
+        /* ---------- Stockage ---------- */
+
+        function mergeState(p) {
+            const def = defaultState();
+            const s = Object.assign(defaultState(), p);
+            const ps = p.settings || {};
+            const pf = ps.forfaits || {};
+            s.settings = Object.assign({}, def.settings, ps);
+            s.settings.forfaits = {
+                semaine: Object.assign({}, def.settings.forfaits.semaine, pf.semaine || {}),
+                samedi: Object.assign({}, def.settings.forfaits.samedi, pf.samedi || {}),
+                dimanche: Object.assign({}, def.settings.forfaits.dimanche, pf.dimanche || {})
+            };
+            s.interventions = Array.isArray(p.interventions) ? p.interventions : [];
+            s.interventions.forEach(i => {
+                i.declaration = i.declaration || { status: 'A_DECLARER', date: null };
+                i.validation = i.validation || { status: 'EN_ATTENTE', date: '' };
+                i.paie = i.paie || { status: 'A_VERIFIER', date: null };
+            });
+            s.paieReelle = p.paieReelle || {};
+            return s;
         }
 
-        function exportDataCSV() {
-            let csv = "ID;Type;Libelle;DateDebut;Prime;Recup;PaieEstimee\n";
-            appState.interventions.forEach(i => { csv += `${i.id};${i.type};${i.libelle};${i.dateDebut};${i.prime};${i.recup};${i.moisPaieEstime || ''}\n`; });
-            const dl = document.createElement('a'); dl.setAttribute("href", encodeURI("data:text/csv;charset=utf-8," + csv)); dl.setAttribute("download", "export_interventions_v8.3.csv"); dl.click();
+        // Fige le mois de paie des interventions dÃ©jÃ  payÃ©es pour qu'il ne dÃ©rive plus.
+        function freezePaidMonths() {
+            let changed = false;
+            appState.interventions.forEach(i => {
+                if (i.paie.status === 'PAYEE' && !i.moisPaieReel) {
+                    const pm = getEstimatedPayMonth(i.dateDebut, i.validation ? i.validation.date : null);
+                    if (isValidPayMonth(pm)) { i.moisPaieReel = pm; changed = true; }
+                }
+            });
+            return changed;
         }
 
-        function saveToLocalStorage() { localStorage.setItem('app_suivi_interventions_v8.3', JSON.stringify(appState)); }
-        
+        function saveToLocalStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appState)); }
+
         function loadFromLocalStorage() {
             try {
-                // Recherche progressive dans les clés précédentes pour ne rien perdre
-                const data = localStorage.getItem('app_suivi_interventions_v8.3') || 
-                             localStorage.getItem('app_suivi_interventions_v8.2') || 
-                             localStorage.getItem('app_suivi_interventions_v8.1') || 
-                             localStorage.getItem('app_suivi_interventions_v8') || 
+                // Recherche progressive dans les clÃ©s prÃ©cÃ©dentes pour ne rien perdre
+                const data = localStorage.getItem(STORAGE_KEY) ||
+                             localStorage.getItem('app_suivi_interventions_v8.3') ||
+                             localStorage.getItem('app_suivi_interventions_v8.2') ||
+                             localStorage.getItem('app_suivi_interventions_v8.1') ||
+                             localStorage.getItem('app_suivi_interventions_v8') ||
                              localStorage.getItem('app_suivi_interventions');
                 if (data) {
-                    appState = JSON.parse(data);
-                    if (appState.fontSize) document.body.className = appState.fontSize;
+                    appState = mergeState(JSON.parse(data));
+                    document.body.className = appState.fontSize || 'font-normal';
+                    if (freezePaidMonths()) saveToLocalStorage();
                 }
             } catch(e) {
                 console.error("Erreur de chargement localStorage", e);
             }
         }
 
-        window.onload = function() { 
-            loadFromLocalStorage(); 
-            updateKPIs(); 
+        window.onload = function() {
+            loadFromLocalStorage();
+            updateKPIs();
         };
     </script>
 </body>
